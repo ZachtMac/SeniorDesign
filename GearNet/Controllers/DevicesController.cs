@@ -113,7 +113,7 @@ namespace GearNet.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", new { id = device.DeviceId });
             }
             return View(device);
         }

@@ -10,9 +10,11 @@ namespace GearNet.Entities
         public int DeviceId { get; set; }
         [MaxLength(50)]
         [DisplayName("Device Name")]
+        [Required(ErrorMessage = "Device Name is required.")]
         public string? DeviceName { get; set; }
         [MaxLength(50)]
         [DisplayName("Device Type")]
+        [Required(ErrorMessage = "Device Type is required.")]
         public string? DeviceType { get; set; }
         [DisplayName("Checked Out?")]
         public bool? IsCheckedOut { get; set; }

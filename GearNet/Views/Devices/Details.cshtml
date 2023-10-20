@@ -4,33 +4,60 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Device Details</h1>
 
 <div>
-    <h4>Device</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DeviceName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DeviceName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DeviceType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DeviceType)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsCheckedOut)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsCheckedOut)
-        </dd>
+    <dl class="flex-column">
+
+        <div class="form-group">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DeviceName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.DeviceName)
+            </dd>
+        </div>
+        <div class="form-group">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DeviceType)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.DeviceType)
+            </dd>
+        </div>
+        <div class="form-group">
+            <dt class="col-sm-2">
+                Checked Out
+                @* @Html.DisplayNameFor(model => model.IsCheckedOut) *@
+            </dt>
+            <dd class="col-sm-10">
+                @Model.IsCheckedOut.ToString()
+            </dd>
+        </div>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model?.DeviceId" class="btn btn-primary">Edit</a>
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.DeviceId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+
+<style>
+    .flex-column {
+        display: flex;
+        flex-direction: column;
+        padding: 2.5px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        padding: 2.5px;
+    }
+
+    .form-group dd {
+        padding: 3.5px 0;
+    }
+
+</style>

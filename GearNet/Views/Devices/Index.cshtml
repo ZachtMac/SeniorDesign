@@ -16,10 +16,19 @@
                 @Html.DisplayNameFor(model => model.DeviceName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DeviceType)
+                @Html.DisplayNameFor(model => model.RackRow)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RackCol)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.IsCheckedOut)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Case.CaseId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Student.StudentId)
             </th>
             <th></th>
         </tr>
@@ -31,10 +40,19 @@
                 @Html.DisplayFor(modelItem => item.DeviceName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DeviceType)
+                @Html.DisplayFor(modelItem => item.RackRow)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RackCol)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IsCheckedOut)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Case.CaseId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student.StudentId)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.DeviceId">Edit</a> |

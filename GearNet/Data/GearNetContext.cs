@@ -22,7 +22,7 @@ namespace GearNet.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Student>()
+            /*modelBuilder.Entity<Student>()
                 .HasMany(d => d.Devices)
                 .WithOne(c => c.Student)
                 .HasForeignKey(d => d.StudentId);
@@ -34,6 +34,7 @@ namespace GearNet.Data
                 .HasMany(s => s.Devices)
                 .WithOne(c => c.Case)
                 .HasForeignKey(d => d.CaseId);
+            */
         }
 
     }

@@ -24,7 +24,6 @@ namespace GearNet.Entities
         [MaxLength(30)]
         [DisplayName("Software Version")]
         public string? SoftwareVersion { get; set; }
-        [MaxLength(10)]
         [DisplayName("Rack Row")]
         public int? RackRow { get; set; }
         [DisplayName("Rack Column")]

@@ -47,7 +47,7 @@ namespace GearNet.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("Cases");
+                    b.ToTable("Cases", (string)null);
                 });
 
             modelBuilder.Entity("GearNet.Entities.Device", b =>
@@ -100,7 +100,7 @@ namespace GearNet.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("Devices");
+                    b.ToTable("Devices", (string)null);
                 });
 
             modelBuilder.Entity("GearNet.Entities.Student", b =>
@@ -125,7 +125,7 @@ namespace GearNet.Migrations
 
                     b.HasKey("StudentId");
 
-                    b.ToTable("Students");
+                    b.ToTable("Students", (string)null);
                 });
 
             modelBuilder.Entity("GearNet.Entities.Case", b =>

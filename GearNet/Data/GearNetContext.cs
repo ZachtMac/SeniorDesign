@@ -22,11 +22,18 @@ namespace GearNet.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            /*modelBuilder.Entity<Device>().HasData(
-                //new Device { DeviceId = 10}
-
-
-                );*/
+            modelBuilder.Entity<Student>()
+                .HasMany(d => d.Devices)
+                .WithOne(c => c.Student)
+                .HasForeignKey(d => d.StudentId);
+            modelBuilder.Entity<Student>()
+                .HasMany(s => s.Cases)
+                .WithOne(c => c.Student)
+                .HasForeignKey(c => c.StudentId);
+            modelBuilder.Entity<Case>()
+                .HasMany(s => s.Devices)
+                .WithOne(c => c.Case)
+                .HasForeignKey(d => d.CaseId);
         }
 
     }

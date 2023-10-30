@@ -4,13 +4,12 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>Edit Device</h1>
 
-<h4>Device</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" asp-route-id="@Model?.DeviceId">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="DeviceId" />
             <div class="form-group">
@@ -49,21 +48,128 @@
                 <span asp-validation-for="Vendor" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="IsCheckedOut" class="control-label"></label>
-                <input asp-for="IsCheckedOut" class="form-control" />
+                <label class="control-label">Checked Out</label>
                 <span asp-validation-for="IsCheckedOut" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group"
+                 style="flex-direction: row; align-items: center">
+                <label class="switch" style="margin-right: 10px;">
+                    <input type="checkbox" id="IsCheckedOutSwitch" @if (Model.IsCheckedOut == true)
+                    {
+                        <text>checked="checked"</text>
+                    }
+                    />
+                    <span class="slider round"></span>
+                </label>
+                <input asp-for="IsCheckedOut" type="hidden" />
+                <span id="toggleText">@Model.IsCheckedOut</span>
+            </div>
+            <div class="form-group" style="flex-direction: row;">
+                <a asp-action="Details"
+                   asp-route-id="@Model?.DeviceId"
+                   class="btn btn-secondary mr-2"
+                   style="margin-right: 5px;">Cancel</a>
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
-
+@*
 <div>
+    <a asp-action="Details" asp-route-id="@Model?.DeviceId">Cancel</a> |
     <a asp-action="Index">Back to List</a>
-</div>
+</div> *@
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const isCheckedOutSwitch = document.getElementById("IsCheckedOutSwitch");
+            const toggleText = document.getElementById("toggleText");
+
+            isCheckedOutSwitch.addEventListener("change", function () {
+                const isCheckedOutHidden = document.querySelector('[name="IsCheckedOut"]'); // Define isCheckedOutHidden
+                isCheckedOutHidden.value = isCheckedOutSwitch.checked;
+                toggleText.textContent = isCheckedOutSwitch.checked ? "True" : "False";
+            });
+
+            // Ensure the checkbox starts as unchecked (False)
+            // isCheckedOutSwitch.checked = false;
+            const isCheckedOutHidden = document.querySelector('[name="IsCheckedOut"]');
+            // isCheckedOutHidden.value = "False";
+        });
+    </script>
 }
+<style>
+
+    .control-label {
+        font-weight: bold;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        padding: 2.5px;
+    }
+
+    /* The switch - the box around the slider */
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+        /* Hide default HTML checkbox */
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    /* The slider */
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+        }
+
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+</style>

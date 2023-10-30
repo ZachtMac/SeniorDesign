@@ -17,6 +17,8 @@ namespace GearNet.Entities
         [MaxLength(50)]
         [DisplayName("Last Name")]
         public string? LastName { get; set; }
+        public virtual ICollection<Device> Devices { get; set; } = new List<Device>();
+        public virtual ICollection<Case> Cases { get; set; } = new List<Case>();
 
     }
 }

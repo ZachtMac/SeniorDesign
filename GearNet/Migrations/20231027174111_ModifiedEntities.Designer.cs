@@ -4,6 +4,7 @@ using GearNet.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GearNet.Migrations
 {
     [DbContext(typeof(GearNetContext))]
-    partial class GearNetContextModelSnapshot : ModelSnapshot
+    [Migration("20231027174111_ModifiedEntities")]
+    partial class ModifiedEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,7 +50,7 @@ namespace GearNet.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("Cases", (string)null);
+                    b.ToTable("Cases");
                 });
 
             modelBuilder.Entity("GearNet.Entities.Device", b =>
@@ -100,7 +103,7 @@ namespace GearNet.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("Devices", (string)null);
+                    b.ToTable("Devices");
                 });
 
             modelBuilder.Entity("GearNet.Entities.Student", b =>
@@ -125,7 +128,7 @@ namespace GearNet.Migrations
 
                     b.HasKey("StudentId");
 
-                    b.ToTable("Students", (string)null);
+                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("GearNet.Entities.Case", b =>

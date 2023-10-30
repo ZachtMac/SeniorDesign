@@ -25,7 +25,34 @@
             </div>
 
             <div class="form-group">
+                <label asp-for="RackRow" class="control-label"></label>
+                <input asp-for="RackRow" class="form-control" type="number" />
+                <span asp-validation-for="RackRow" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RackCol" class="control-label"></label>
+                <input asp-for="RackCol" class="form-control" type="number" />
+                <span asp-validation-for="RackCol" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OperatingSystem" class="control-label"></label>
+                <input asp-for="OperatingSystem" class="form-control" />
+                <span asp-validation-for="OperatingSystem" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SoftwareVersion" class="control-label"></label>
+                <input asp-for="SoftwareVersion" class="form-control" />
+                <span asp-validation-for="SoftwareVersion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Vendor" class="control-label"></label>
+                <input asp-for="Vendor" class="form-control" />
+                <span asp-validation-for="Vendor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label class="control-label">Checked Out</label>
+                <span asp-validation-for="IsCheckedOut" class="text-danger"></span>
+
             </div>
 
             <div 

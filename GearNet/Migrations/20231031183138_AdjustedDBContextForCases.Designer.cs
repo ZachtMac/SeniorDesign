@@ -4,6 +4,7 @@ using GearNet.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GearNet.Migrations
 {
     [DbContext(typeof(GearNetContext))]
-    partial class GearNetContextModelSnapshot : ModelSnapshot
+    [Migration("20231031183138_AdjustedDBContextForCases")]
+    partial class AdjustedDBContextForCases
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,7 +34,6 @@ namespace GearNet.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CaseId"));
 
                     b.Property<string>("CaseName")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -39,15 +41,10 @@ namespace GearNet.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<double?>("Duration")
-                        .IsRequired()
                         .HasColumnType("float");
 
                     b.Property<int?>("StudentId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CaseId");
 

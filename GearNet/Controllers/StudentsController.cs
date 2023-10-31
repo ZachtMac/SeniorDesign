@@ -10,91 +10,91 @@ using GearNet.Entities;
 
 namespace GearNet.Controllers
 {
-    public class DevicesController : Controller
+    public class StudentsController : Controller
     {
         private readonly GearNetContext _context;
 
-        public DevicesController(GearNetContext context)
+        public StudentsController(GearNetContext context)
         {
             _context = context;
         }
 
-        // GET: Devices
+        // GET: Students
         public async Task<IActionResult> Index(string searchString)
         {
-            var devices = _context.Devices.AsQueryable();
+            var students = _context.Students.AsQueryable();
             if (!string.IsNullOrEmpty(searchString))
             {
-                devices = devices.Where(c => c.DeviceName.Contains(searchString));
+                students = students.Where(c => c.Username.Contains(searchString));
             }
 
-            return View(await devices.ToListAsync());
+            return View(await students.ToListAsync());
         }
 
-        // GET: Devices/Details/5
+        // GET: Students/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Devices == null)
+            if (id == null || _context.Students == null)
             {
                 return NotFound();
             }
 
-            var device = await _context.Devices
-                .FirstOrDefaultAsync(m => m.DeviceId == id);
-            if (device == null)
+            var student = await _context.Students
+                .FirstOrDefaultAsync(m => m.StudentId == id);
+            if (student == null)
             {
                 return NotFound();
             }
 
-            return View(device);
+            return View(student);
         }
 
-        // GET: Devices/Create
+        // GET: Students/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Devices/Create
+        // POST: Students/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DeviceId,DeviceName,DeviceType,RackRow,RackCol,OperatingSystem,SoftwareVersion,Vendor,IsCheckedOut")] Device device)
+        public async Task<IActionResult> Create([Bind("StudentId,Username,FirstName,LastName")] Student student)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(device);
+                _context.Add(student);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(device);
+            return View(student);
         }
 
-        // GET: Devices/Edit/5
+        // GET: Students/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Devices == null)
+            if (id == null || _context.Students == null)
             {
                 return NotFound();
             }
 
-            var device = await _context.Devices.FindAsync(id);
-            if (device == null)
+            var student = await _context.Students.FindAsync(id);
+            if (student == null)
             {
                 return NotFound();
             }
-            return View(device);
+            return View(student);
         }
 
-        // POST: Devices/Edit/5
+        // POST: Students/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DeviceId,DeviceName,DeviceType,RackRow,RackCol,OperatingSystem,SoftwareVersion,Vendor,IsCheckedOut")] Device device)
+        public async Task<IActionResult> Edit(int id, [Bind("StudentId,Username,FirstName,LastName")] Student student)
         {
-            if (id != device.DeviceId)
+            if (id != student.StudentId)
             {
                 return NotFound();
             }
@@ -103,12 +103,12 @@ namespace GearNet.Controllers
             {
                 try
                 {
-                    _context.Update(device);
+                    _context.Update(student);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DeviceExists(device.DeviceId))
+                    if (!StudentExists(student.StudentId))
                     {
                         return NotFound();
                     }
@@ -117,51 +117,51 @@ namespace GearNet.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Details", new { id = device.DeviceId });
+                return RedirectToAction(nameof(Index));
             }
-            return View(device);
+            return View(student);
         }
 
-        // GET: Devices/Delete/5
+        // GET: Students/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Devices == null)
+            if (id == null || _context.Students == null)
             {
                 return NotFound();
             }
 
-            var device = await _context.Devices
-                .FirstOrDefaultAsync(m => m.DeviceId == id);
-            if (device == null)
+            var student = await _context.Students
+                .FirstOrDefaultAsync(m => m.StudentId == id);
+            if (student == null)
             {
                 return NotFound();
             }
 
-            return View(device);
+            return View(student);
         }
 
-        // POST: Devices/Delete/5
+        // POST: Students/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Devices == null)
+            if (_context.Students == null)
             {
-                return Problem("Entity set 'GearNetContext.Devices'  is null.");
+                return Problem("Entity set 'GearNetContext.Students'  is null.");
             }
-            var device = await _context.Devices.FindAsync(id);
-            if (device != null)
+            var student = await _context.Students.FindAsync(id);
+            if (student != null)
             {
-                _context.Devices.Remove(device);
+                _context.Students.Remove(student);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DeviceExists(int id)
+        private bool StudentExists(int id)
         {
-          return (_context.Devices?.Any(e => e.DeviceId == id)).GetValueOrDefault();
+          return (_context.Students?.Any(e => e.StudentId == id)).GetValueOrDefault();
         }
     }
 }

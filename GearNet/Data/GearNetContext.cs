@@ -10,11 +10,15 @@ namespace GearNet.Data
 {
     public class GearNetContext:DbContext
     {
+        public GearNetContext()
+        {
+        }
+
         public GearNetContext(DbContextOptions<GearNetContext> options) : base(options)
         {
             
         }
-
+        public DbSet<Case> Cases { get; set; }
         public DbSet<Device> Devices { get; set; }
         public DbSet<Student> Students { get; set; }
 

@@ -10,91 +10,104 @@ using GearNet.Entities;
 
 namespace GearNet.Controllers
 {
-    public class DevicesController : Controller
+    public class CasesController : Controller
     {
         private readonly GearNetContext _context;
 
-        public DevicesController(GearNetContext context)
+        public CasesController(GearNetContext context)
         {
             _context = context;
         }
 
-        // GET: Devices
+        // GET: Cases
         public async Task<IActionResult> Index(string searchString)
         {
-            var devices = _context.Devices.AsQueryable();
+            var cases = _context.Cases.AsQueryable();
             if (!string.IsNullOrEmpty(searchString))
             {
-                devices = devices.Where(c => c.DeviceName.Contains(searchString));
+                cases = cases.Where(c => c.CaseName.Contains(searchString));
             }
 
-            return View(await devices.ToListAsync());
+            return View(await cases.ToListAsync());
         }
 
-        // GET: Devices/Details/5
+        // GET: Cases/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Devices == null)
+            if (id == null || _context.Cases == null)
             {
                 return NotFound();
             }
 
-            var device = await _context.Devices
-                .FirstOrDefaultAsync(m => m.DeviceId == id);
-            if (device == null)
+            var case_ = await _context.Cases
+                .FirstOrDefaultAsync(m => m.CaseId == id);
+            if (case_ == null)
             {
                 return NotFound();
             }
 
-            return View(device);
+            return View(case_);
         }
 
-        // GET: Devices/Create
+        // GET: Cases/Create
         public IActionResult Create()
         {
             return View();
         }
-
-        // POST: Devices/Create
+        
+        // POST: Cases/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DeviceId,DeviceName,DeviceType,RackRow,RackCol,OperatingSystem,SoftwareVersion,Vendor,IsCheckedOut")] Device device)
+        public async Task<IActionResult> Create([Bind("CaseId,CaseName,DateTime,Duration,Username")] Case case_)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(device);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                
+                var student = _context.Students.FirstOrDefault(s => s.Username == case_.Username);
+
+                if(student != null)
+                {
+                    case_.Student = student;
+                    _context.Add(case_);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ModelState.AddModelError("Username", "Student with the provided username does not exist.");
+                }
+                
+
             }
-            return View(device);
+            return View(case_);
         }
 
-        // GET: Devices/Edit/5
+        // GET: Cases/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Devices == null)
+            if (id == null || _context.Cases == null)
             {
                 return NotFound();
             }
 
-            var device = await _context.Devices.FindAsync(id);
-            if (device == null)
+            var case_ = await _context.Cases.FindAsync(id);
+            if (case_ == null)
             {
                 return NotFound();
             }
-            return View(device);
+            return View(case_);
         }
 
-        // POST: Devices/Edit/5
+        // POST: Cases/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DeviceId,DeviceName,DeviceType,RackRow,RackCol,OperatingSystem,SoftwareVersion,Vendor,IsCheckedOut")] Device device)
+        public async Task<IActionResult> Edit(int id, [Bind("CaseId,CaseName,DateTime,Duration,StudentId")] Case case_)
         {
-            if (id != device.DeviceId)
+            if (id != case_.CaseId)
             {
                 return NotFound();
             }
@@ -103,12 +116,12 @@ namespace GearNet.Controllers
             {
                 try
                 {
-                    _context.Update(device);
+                    _context.Update(case_);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DeviceExists(device.DeviceId))
+                    if (!CaseExists(case_.CaseId))
                     {
                         return NotFound();
                     }
@@ -117,51 +130,51 @@ namespace GearNet.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Details", new { id = device.DeviceId });
+                return RedirectToAction("Details", new { id = case_.CaseId });
             }
-            return View(device);
+            return View(case_);
         }
 
-        // GET: Devices/Delete/5
+        // GET: Cases/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Devices == null)
+            if (id == null || _context.Cases == null)
             {
                 return NotFound();
             }
 
-            var device = await _context.Devices
-                .FirstOrDefaultAsync(m => m.DeviceId == id);
-            if (device == null)
+            var case_ = await _context.Cases
+                .FirstOrDefaultAsync(m => m.CaseId == id);
+            if (case_ == null)
             {
                 return NotFound();
             }
 
-            return View(device);
+            return View(case_);
         }
 
-        // POST: Devices/Delete/5
+        // POST: Cases/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Devices == null)
+            if (_context.Cases == null)
             {
-                return Problem("Entity set 'GearNetContext.Devices'  is null.");
+                return Problem("Entity set 'GearNetContext.Cases'  is null.");
             }
-            var device = await _context.Devices.FindAsync(id);
-            if (device != null)
+            var case_ = await _context.Cases.FindAsync(id);
+            if (case_ != null)
             {
-                _context.Devices.Remove(device);
+                _context.Cases.Remove(case_);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DeviceExists(int id)
+        private bool CaseExists(int id)
         {
-          return (_context.Devices?.Any(e => e.DeviceId == id)).GetValueOrDefault();
+            return (_context.Cases?.Any(e => e.CaseId == id)).GetValueOrDefault();
         }
     }
 }

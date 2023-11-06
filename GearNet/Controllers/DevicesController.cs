@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GearNet.Data;
 using GearNet.Entities;
+using Microsoft.CodeAnalysis.Operations;
 
 namespace GearNet.Controllers
 {
@@ -20,16 +21,39 @@ namespace GearNet.Controllers
         }
 
         // GET: Devices
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string deviceName, string deviceType, int? rackRow, int? rackCol, bool? isCheckedOut)
         {
             var devices = _context.Devices.AsQueryable();
-            if (!string.IsNullOrEmpty(searchString))
+
+            if (!string.IsNullOrEmpty(deviceName))
             {
-                devices = devices.Where(c => c.DeviceName.Contains(searchString));
+                devices = devices.Where(c => c.DeviceName.Contains(deviceName));
             }
+
+            if (!string.IsNullOrEmpty(deviceType))
+            {
+                devices = devices.Where(c => c.DeviceType.Contains(deviceType));
+            }
+
+            if (rackRow.HasValue)
+            {
+                devices = devices.Where(c => c.RackRow == rackRow);
+            }
+
+            if (rackCol.HasValue)
+            {
+                devices = devices.Where(c => c.RackCol == rackCol);
+            }
+
+            if (isCheckedOut.HasValue)
+            {
+                devices = devices.Where(c => c.IsCheckedOut == isCheckedOut);
+            }
+
 
             return View(await devices.ToListAsync());
         }
+
 
         // GET: Devices/Details/5
         public async Task<IActionResult> Details(int? id)

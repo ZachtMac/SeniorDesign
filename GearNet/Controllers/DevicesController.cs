@@ -20,8 +20,7 @@ namespace GearNet.Controllers
             _context = context;
         }
 
-        // GET: Devices
-        public async Task<IActionResult> Index(string deviceName, string deviceType, int? rackRow, int? rackCol, bool? isCheckedOut)
+        public async Task<IActionResult> Index(string deviceName, string deviceType, int? rackRow, int? rackCol, string? isCheckedOut)
         {
             var devices = _context.Devices.AsQueryable();
 
@@ -45,14 +44,24 @@ namespace GearNet.Controllers
                 devices = devices.Where(c => c.RackCol == rackCol);
             }
 
-            if (isCheckedOut.HasValue)
+            if (!string.IsNullOrEmpty(isCheckedOut))
             {
-                devices = devices.Where(c => c.IsCheckedOut == isCheckedOut);
+                if (bool.TryParse(isCheckedOut, out bool isCheckedOutValue))
+                {
+                    devices = devices.Where(c => c.IsCheckedOut == isCheckedOutValue);
+                }
             }
 
+            // Pass the search parameters as route values
+            ViewData["deviceName"] = deviceName;
+            ViewData["deviceType"] = deviceType;
+            ViewData["rackRow"] = rackRow;
+            ViewData["rackCol"] = rackCol;
+            ViewData["isCheckedOut"] = isCheckedOut;
 
             return View(await devices.ToListAsync());
         }
+
 
 
         // GET: Devices/Details/5

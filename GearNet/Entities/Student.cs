@@ -9,7 +9,7 @@ namespace GearNet.Entities
     {
         public int StudentId { get; set; }
         [MaxLength(10)]
-        [DisplayName("6+2 Username")]
+        [DisplayName("Username (6+2)")]
         public string? Username { get; set; }
         [MaxLength(50)]
         [DisplayName("First Name")]

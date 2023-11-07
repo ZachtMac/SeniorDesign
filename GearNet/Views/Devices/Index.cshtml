@@ -8,7 +8,7 @@
 <head>
     <style>
         body {
-            background-image: url('assets/device background.png');
+            background-image: url('assets/splashbackdrop.png');
             background-size: 100% 100%;
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -17,7 +17,10 @@
 
         div {
             padding: 5px;
-            background-color: rgba(255, 255, 255, 1); /* Adjust the alpha (0.5) for the desired opacity */
+        }
+
+        .tableForm {
+            background-color: rgba(255, 255, 255, .75); /* Adjust the alpha (0.5) for the desired opacity */
         }
 
         .dropbtn {
@@ -71,75 +74,47 @@
             transition: transform 0.3s; /* Add a smooth transition for the arrow icon */
         }
 
-        .dropbtn.active #arrowIcon {
-            transform: rotate(180deg); /* Rotate the arrow 180 degrees when active */
+        .grey-text {
+            color: grey;
         }
 
         .show {
             display: block;
         }
-        /* The switch - the box around the slider */
-        .switch {
-            position: relative;
+
+        .arrow-down {
             display: inline-block;
-            width: 60px;
-            height: 34px;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid #000;
+            transition: transform 0.3s;
         }
 
-            /* Hide default HTML checkbox */
-            .switch input {
-                opacity: 0;
-                width: 0;
-                height: 0;
+        .select-container {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+            .select-container select {
+                width: 100%;
             }
 
-        /* The slider */
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: 0.4s;
-        }
-
-            .slider:before {
-                position: absolute;
-                content: "";
-                height: 26px;
-                width: 26px;
-                left: 4px;
-                bottom: 4px;
-                background-color: white;
-                transition: 0.4s;
+            .select-container.active .arrow-down {
+                transform: rotate(180deg);
             }
 
-        input:checked + .slider {
-            background-color: #2196F3;
+
+        table {
+            background-color: rgba(255, 255, 255, 0); /* Adjust the alpha (0.5) for the desired opacity */
         }
 
-        input:focus + .slider {
-            box-shadow: 0 0 1px #2196F3;
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-
-        /* Rounded sliders */
-        .slider.round {
-            border-radius: 34px;
-        }
-
-            .slider.round:before {
-                border-radius: 50%;
-            }
     </style>
 </head>
 <body>
-    <div>
+    <div class="tableForm">
         <form method="get" asp-action="Index">
             <div class="row" style="width: 100%; flex-wrap: nowrap">
                 <div class="col-7" style="margin-right: 5px;">
@@ -150,51 +125,77 @@
                 <div class="col-5" style="display: flex; justify-content: flex-end;">
                     <div class="dropdown" style="margin-left: auto;">
                         <div style="display: flex">
-                        <a asp-action="Create" class="btn btn-success">Create New</a>
-                        <button id="dropdownButton" class="dropbtn" style="border-radius: 0.25rem; padding: 7.5px">
-                            Search <span id="arrowIcon"></span>
-                        </button>
+                            <a asp-action="Create" class="btn btn-success">Create New</a>
+                            <button id="dropdownButton" class="dropbtn" style="border-radius: 0.25rem; padding: 7.5px">
+                                Search <span id="arrowIcon"></span>
+                            </button>
                         </div>
                         <div id="myDropdown" class="dropdown-content" style="padding: 10px; width: 250px">
+                            @if(ViewData.ContainsKey("deviceName"))
+                            {
                             <div style="margin-bottom: 10px;">
-                                Name: <input type="text" name="deviceName" class="form-control" placeholder="Device Name..." />
-                            </div>
-                            <div style="margin-bottom: 10px;">
-                                Type: <input type="text" name="deviceType" class="form-control" placeholder="Device Type..." />
-                            </div>
-                            <div style="margin-bottom: 10px;">
-                                Row: <input type="number" name="rackRow" class="form-control" placeholder="Rack Row..." />
-                            </div>
-                            <div style="margin-bottom: 10px;">
-                                Column: <input type="number" name="rackCol" class="form-control" placeholder="Rack Column..." />
-                            </div>
-                            <div style="margin-bottom: 10px;">
-                                Checked Out:
-                                <div
-                                     style="flex-direction: row; align-items: center">
-                                    <label class="switch" style="margin-right: 10px;">
-                                        <input type="checkbox" id="IsCheckedOutSwitch">
-                                        <span class="slider round"></span>
-                                    </label>
-
-                                    <span id="toggleText" class="ml-2">False</span>
+                                Name: <input type="text" name="deviceName" class="form-control" placeholder="Device Name..." value="@ViewData["deviceName"]" />
                                 </div>
-                                <input type="hidden" name="isCheckedOut" id="isCheckedOutHidden" value="False">
+                            } else
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    Name: <input type="text" name="deviceName" class="form-control" placeholder="Device Name..." />
+                                </div>
+                            }
+                            @if (ViewData.ContainsKey("deviceType"))
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    Type: <input type="text" name="deviceType" class="form-control" placeholder="Device Type..." value="@ViewData["deviceType"]" />
+                                </div>
+                            } else
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    Type: <input type="text" name="deviceType" class="form-control" placeholder="Device Type..." />
+                                </div>
+                            }
 
+                            @if (ViewData.ContainsKey("rackRow"))
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    Row: <input type="number" name="rackRow" class="form-control" placeholder="Rack Row..." value="@ViewData["rackRow"]" />
+                                </div>
+                            } else
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    Row: <input type="number" name="rackRow" class="form-control" placeholder="Rack Row..." />
+                                </div>
+                            }
+
+                            @if (ViewData.ContainsKey("rackCol"))
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    Column: <input type="number" name="rackCol" class="form-control" placeholder="Rack Column..." value="@ViewData["rackCol"]" />
+                                </div>
+                            } else
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    Column: <input type="number" name="rackCol" class="form-control" placeholder="Rack Column..."  />
+                                </div>
+                            }
+                            <div style="margin-bottom: 10px;" class="dropdown-select">
+                                Checked Out:
+                                <select id="isCheckedOutSelect" name="isCheckedOut" class="form-control">
+                                    <option style="color: grey" value="unselected" selected='@((string)ViewData["isCheckedOut"] == "unselected" ? "selected" : null)'>(Select All)</option>
+                                    <option value="true" selected='@((string)ViewData["isCheckedOut"] == "true" ? "selected" : null)'>True</option>
+                                    <option value="false" selected='@((string)ViewData["isCheckedOut"] == "false" ? "selected" : null)'>False</option>
+                                </select>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">Search</button>
+
+
+
+                            <button type="submit" class="btn btn-primary btn-block" onclick="" style="margin-top: 10px;">Search</button>
                             <button type="submit" class="btn btn-secondary btn-block" onclick="clearSearch()" style="margin-top: 10px;">Reset</button>
 
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </form>
-        <p>
-            
-        </p>
         <table class="table">
             <thead>
                 <tr>
@@ -263,79 +264,57 @@
     <script>
         var searchValues = {};
         document.getElementById("dropdownButton").addEventListener("click", function (event) {
-            event.preventDefault(); // Prevent form submission
+            event.preventDefault();
             toggleDropdown();
         });
 
         document.addEventListener("DOMContentLoaded", function () {
-            const isCheckedOutSwitch = document.getElementById("IsCheckedOutSwitch");
-            const isCheckedOutHidden = document.querySelector('input[name="isCheckedOut"]');
-            const toggleText = document.getElementById("toggleText");
-
-            isCheckedOutSwitch.addEventListener("change", function () {
-                if (isCheckedOutSwitch.checked) {
-                    isCheckedOutHidden.value = "True";
-                    toggleText.textContent = "True";
+            const isCheckedOutSelect = document.getElementById("isCheckedOutSelect");
+            isCheckedOutSelect.addEventListener("change", function () {
+                if (isCheckedOutSelect.value === "unselected") {
+                    isCheckedOutSelect.classList.add("grey-text");
                 } else {
-                    isCheckedOutHidden.value = "False";
-                    toggleText.textContent = "False";
-                console.log(isCheckedOutHidden.value)
+                    isCheckedOutSelect.classList.remove("grey-text");
                 }
             });
 
-            // Initialize the hidden input value based on the checkbox state
-            isCheckedOutHidden.value = isCheckedOutSwitch.checked ? "True" : "False";
         });
 
-        function toggleDropdown() {
-            var dropdown = document.getElementById("myDropdown");
-            var button = document.getElementById("dropdownButton");
 
-            if (dropdown.classList.contains("show")) {
-                dropdown.classList.remove("show");
-                button.classList.remove("active");
+        function toggleDropdown() {
+            const isCheckedOutSelect = document.getElementById("isCheckedOutSelect");
+            var dropdown = document.getElementById("myDropdown");
+            var arrowIcon = document.getElementById("arrowIcon");
+            var selectContainer = document.querySelector(".select-container");
+
+            if (isCheckedOutSelect.value === "unselected") {
+                isCheckedOutSelect.classList.add("grey-text");
+            }
+
+            if (dropdown.style.display === "block") {
+                dropdown.style.display = "none";
+                arrowIcon.style.transform = "rotate(0deg)";
+                selectContainer.classList.remove("active");
             } else {
-                dropdown.classList.add("show");
-                button.classList.add("active");
+                dropdown.style.display = "block";
+                arrowIcon.style.transform = "rotate(180deg)";
+                selectContainer.classList.add("active");
             }
         }
 
-
-        function toggleDropdown() {
-            var dropdown = document.getElementById("myDropdown");
-            var button = document.getElementById("dropdownButton");
-
-            if (dropdown.classList.contains("show")) {
-                dropdown.classList.remove("show");
-                button.classList.remove("active");
-            } else {
-                dropdown.classList.add("show");
-                button.classList.add("active");
-            }
-        }
-
-        function saveSearchValues() {
-            // Save the current form values
-            searchValues.deviceName = document.querySelector('input[name="deviceName"]').value;
-            searchValues.deviceType = document.querySelector('input[name="deviceType"]').value;
-            searchValues.rackRow = document.querySelector('input[name="rackRow"]').value;
-            searchValues.rackCol = document.querySelector('input[name="rackCol"]').value;
-            searchValues.isCheckedOut = document.querySelector('input[name="isCheckedOut"]').value;
-            searchValues.caseId = document.querySelector('input[name="caseId"]').value;
-            searchValues.studentId = document.querySelector('input[name="studentId"]').value;
-        }
         function clearSearch() {
-            // Clear the input fields by setting their values to an empty string
+            const isCheckedOutSelect = document.getElementById("isCheckedOutSelect");
+
+            isCheckedOutSelect.value = "unselected"
+
+
             document.querySelector('input[name="deviceName"]').value = "";
             document.querySelector('input[name="deviceType"]').value = "";
             document.querySelector('input[name="rackRow"]').value = "";
             document.querySelector('input[name="rackCol"]').value = "";
-            document.querySelector('input[name="isCheckedOut"]').value = "";
             document.querySelector('input[name="caseId"]').value = "";
             document.querySelector('input[name="studentId"]').value = "";
         }
     </script>
-
-
 </body>
 </html>

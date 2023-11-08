@@ -138,7 +138,7 @@
             background-color: rgba(255, 255, 255, 0); /* Adjust the alpha (0.5) for the desired opacity */
         }
 
-        .green-hover:hover{
+        .green-hover:hover {
             background-color: #29a76d;
             border-color: #29a76d
         }
@@ -176,7 +176,8 @@
                                 <div style="margin-bottom: 10px;">
                                     Case Name: <input type="text" name="caseName" class="form-control" placeholder="Case Name..." value="@ViewData["caseName"]" />
                                 </div>
-                            } else
+                            }
+                            else
                             {
                                 <div style="margin-bottom: 10px;">
                                     Case Name: <input type="text" name="caseName" class="form-control" placeholder="Case Name..." />
@@ -187,27 +188,30 @@
                                 @if (ViewData.ContainsKey("startDate"))
                                 {
                                     <input type="date" name="startDate" class="form-control" placeholder="" value="@ViewData["startDate"]" />
-                                } else
+                                }
+                                else
                                 {
                                     <input type="date" name="startDate" class="form-control" placeholder="" />
                                 }
-                                End: 
+                                End:
                                 @if (ViewData.ContainsKey("endDate"))
                                 {
                                     <input type="date" name="endDate" class="form-control" placeholder="" value="@ViewData["endDate"]" />
-                                } else
+                                }
+                                else
                                 {
                                     <input type="date" name="endDate" class="form-control" placeholder="" />
                                 }
                             </div>
 
-                            
+
                             @if (ViewData.ContainsKey("duration"))
                             {
                                 <div style="margin-bottom: 10px;">
                                     Duration: <input type="number" name="duration" class="form-control" placeholder="Duration..." value="@ViewData["duration"]" />
                                 </div>
-                            } else
+                            }
+                            else
                             {
                                 <div style="margin-bottom: 10px;">
                                     Duration: <input type="number" name="duration" class="form-control" placeholder="Duration..." />
@@ -218,7 +222,8 @@
                                 <div style="margin-bottom: 10px;">
                                     Student Username: <input type="text" name="studentUser" class="form-control" placeholder="Student Username..." value="@ViewData["studentUser"]" />
                                 </div>
-                            } else
+                            }
+                            else
                             {
                                 <div style="margin-bottom: 10px;">
                                     Student Username: <input type="text" name="studentUser" class="form-control" placeholder="Student Username..." />
@@ -287,7 +292,6 @@
         });
 
 
-
         document.addEventListener("DOMContentLoaded", function () {
             const isCheckedOutSwitch = document.getElementById("IsCheckedOutSwitch");
             const isCheckedOutHidden = document.querySelector('input[name="isCheckedOut"]');
@@ -300,7 +304,6 @@
                 } else {
                     isCheckedOutHidden.value = "False";
                     toggleText.textContent = "False";
-                    console.log(isCheckedOutHidden.value)
                 }
             });
 

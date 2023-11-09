@@ -20,13 +20,42 @@ namespace GearNet.Controllers
         }
 
         // GET: Cases
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string caseName, DateTime? startDate, DateTime? endDate, int? duration, string? studentUser)
         {
             var cases = _context.Cases.AsQueryable();
-            if (!string.IsNullOrEmpty(searchString))
+
+            if (!string.IsNullOrEmpty(caseName))
             {
-                cases = cases.Where(c => c.CaseName.Contains(searchString));
+                cases = cases.Where(c => c.CaseName.Contains(caseName));
             }
+
+            if (startDate.HasValue)
+            {
+                cases = cases.Where(c => c.DateTime >= startDate.Value.Date);
+            }
+
+            if (endDate.HasValue)
+            {
+                // Include records on the end date by adding a day to the endDate
+                var adjustedEndDate = endDate.Value.Date.AddDays(1);
+                cases = cases.Where(c => c.DateTime < adjustedEndDate);
+            }
+
+            if (duration.HasValue)
+            {
+                cases = cases.Where(c => c.Duration == duration);
+            }
+
+            if (!string.IsNullOrEmpty(studentUser))
+            {
+                cases = cases.Where(c => c.Username.Contains(studentUser));
+            }
+
+            ViewData["caseName"] = caseName;
+            ViewData["startDate"] = startDate.HasValue ? startDate.Value.ToString("yyyy-MM-dd") : null;
+            ViewData["endDate"] = endDate.HasValue ? endDate.Value.ToString("yyyy-MM-dd") : null;
+            ViewData["duration"] = duration;
+            ViewData["studentUser"] = studentUser;
 
             return View(await cases.ToListAsync());
         }

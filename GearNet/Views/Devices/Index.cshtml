@@ -3,88 +3,318 @@
 @{
     ViewData["Title"] = "Index";
 }
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background-image: url('assets/splashbackdrop.png');
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-color: rgba(255, 255, 255, 1); /* Adjust the alpha (0.5) for the desired opacity */
+        }
 
-<form method="get" asp-action="Index">
-    <div class="row">
-        <div class="col-7" style="margin-right: 5px;">
-            <div class="form-group">
-                <h1>Devices</h1>
+        div {
+            padding: 5px;
+        }
+
+        .tableForm {
+            background-color: rgba(255, 255, 255, .90); /* Adjust the alpha (0.5) for the desired opacity */
+        }
+
+        .dropbtn {
+            background-color: #3498DB;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+            .dropbtn:hover, .dropbtn:focus {
+                background-color: #2980B9;
+            }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            overflow: auto;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
+
+        .dropdown a:hover {
+            background-color: #115d39;
+        }
+
+        /* Add this CSS to your existing styles */
+        #arrowIcon {
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid #fff; /* Set the color of the arrow to match your button's background */
+            margin-left: 5px; /* Adjust the margin to position the arrow correctly */
+            transition: transform 0.3s; /* Add a smooth transition for the arrow icon */
+        }
+
+        .grey-text {
+            color: grey;
+        }
+
+        .show {
+            display: block;
+        }
+
+        .arrow-down {
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid #000;
+            transition: transform 0.3s;
+        }
+
+        .select-container {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+            .select-container select {
+                width: 100%;
+            }
+
+            .select-container.active .arrow-down {
+                transform: rotate(180deg);
+            }
+
+
+        table {
+            background-color: rgba(255, 255, 255, 0); /* Adjust the alpha (0.5) for the desired opacity */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="tableForm">
+        <form method="get" asp-action="Index">
+            <div class="row" style="width: 100%; flex-wrap: nowrap">
+                <div class="col-7" style="margin-right: 5px;">
+                    <div class="form-group">
+                        <h1>Devices</h1>
+                    </div>
+                </div>
+                <div class="col-5" style="display: flex; justify-content: flex-end;">
+                    <div class="dropdown" style="margin-left: auto;">
+                        <div style="display: flex">
+                            <a asp-action="Create" class="btn btn-success">Create New</a>
+                            <button id="dropdownButton" class="dropbtn" style="border-radius: 0.25rem; padding: 7.5px">
+                                Search <span id="arrowIcon"></span>
+                            </button>
+                        </div>
+                        <div id="myDropdown" class="dropdown-content" style="padding: 10px; width: 250px">
+                            @if(ViewData.ContainsKey("deviceName"))
+                            {
+                            <div style="margin-bottom: 10px;">
+                                Name: <input type="text" name="deviceName" class="form-control" placeholder="Device Name..." value="@ViewData["deviceName"]" />
+                                </div>
+                            } else
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    Name: <input type="text" name="deviceName" class="form-control" placeholder="Device Name..." />
+                                </div>
+                            }
+                            @if (ViewData.ContainsKey("deviceType"))
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    Type: <input type="text" name="deviceType" class="form-control" placeholder="Device Type..." value="@ViewData["deviceType"]" />
+                                </div>
+                            } else
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    Type: <input type="text" name="deviceType" class="form-control" placeholder="Device Type..." />
+                                </div>
+                            }
+
+                            @if (ViewData.ContainsKey("rackRow"))
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    Row: <input type="number" name="rackRow" class="form-control" placeholder="Rack Row..." value="@ViewData["rackRow"]" />
+                                </div>
+                            } else
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    Row: <input type="number" name="rackRow" class="form-control" placeholder="Rack Row..." />
+                                </div>
+                            }
+
+                            @if (ViewData.ContainsKey("rackCol"))
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    Column: <input type="number" name="rackCol" class="form-control" placeholder="Rack Column..." value="@ViewData["rackCol"]" />
+                                </div>
+                            } else
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    Column: <input type="number" name="rackCol" class="form-control" placeholder="Rack Column..."  />
+                                </div>
+                            }
+                            <div style="margin-bottom: 10px;" class="dropdown-select">
+                                Checked Out:
+                                <select id="isCheckedOutSelect" name="isCheckedOut" class="form-control">
+                                    <option style="color: grey" value="unselected" selected='@((string)ViewData["isCheckedOut"] == "unselected" ? "selected" : null)'>(Select All)</option>
+                                    <option value="true" selected='@((string)ViewData["isCheckedOut"] == "true" ? "selected" : null)'>True</option>
+                                    <option value="false" selected='@((string)ViewData["isCheckedOut"] == "false" ? "selected" : null)'>False</option>
+                                </select>
+                            </div>
+
+
+
+                            <button type="submit" class="btn btn-primary btn-block" onclick="" style="margin-top: 10px;">Search</button>
+                            <button type="submit" class="btn btn-secondary btn-block" onclick="clearSearch()" style="margin-top: 10px;">Reset</button>
+
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col-2">
-            <div class="form-group">
-                <input type="text" name="searchString" class="form-control" placeholder="Search by Device Type" />
-            </div>
-        </div>
-        <div class="col-1">
-            <button type="submit" class="btn btn-primary btn-block">Search</button>
-        </div>
+        </form>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DeviceName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DeviceType)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.RackRow)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.RackCol)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IsCheckedOut)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Case.CaseId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Student.StudentId)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DeviceName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DeviceType)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RackRow)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RackCol)
+                        </td>
+                        <td>
+                            @item.IsCheckedOut.ToString()
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CaseId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StudentId)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.DeviceId"
+                               class="btn btn-primary">Edit</a>
+                            <a asp-action="Details" asp-route-id="@item.DeviceId"
+                               class="btn btn-secondary">Details</a>
+                            <a asp-action="Delete" asp-route-id="@item.DeviceId"
+                               class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
-</form>
+    <script>
+        var searchValues = {};
+        document.getElementById("dropdownButton").addEventListener("click", function (event) {
+            event.preventDefault();
+            toggleDropdown();
+        });
 
-<p>
-    <a asp-action="Create" class="btn btn-success">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.DeviceName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DeviceType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RackRow)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RackCol)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsCheckedOut)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Case.CaseId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Student.StudentId)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeviceName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeviceType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RackRow)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RackCol)
-            </td>
-            <td>
-                @item.IsCheckedOut.ToString()
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Case.CaseId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Student.StudentId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.DeviceId"
-                   class="btn btn-primary">Edit</a>
-                <a asp-action="Details" asp-route-id="@item.DeviceId"
-                   class="btn btn-secondary">Details</a>
-                <a asp-action="Delete" asp-route-id="@item.DeviceId"
-                   class="btn btn-danger">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        document.addEventListener("DOMContentLoaded", function () {
+            const isCheckedOutSelect = document.getElementById("isCheckedOutSelect");
+            isCheckedOutSelect.addEventListener("change", function () {
+                if (isCheckedOutSelect.value === "unselected") {
+                    isCheckedOutSelect.classList.add("grey-text");
+                } else {
+                    isCheckedOutSelect.classList.remove("grey-text");
+                }
+            });
+
+        });
+
+
+        function toggleDropdown() {
+            const isCheckedOutSelect = document.getElementById("isCheckedOutSelect");
+            var dropdown = document.getElementById("myDropdown");
+            var arrowIcon = document.getElementById("arrowIcon");
+            var selectContainer = document.querySelector(".select-container");
+
+            if (isCheckedOutSelect.value === "unselected") {
+                isCheckedOutSelect.classList.add("grey-text");
+            }
+
+            if (dropdown.style.display === "block") {
+                dropdown.style.display = "none";
+                arrowIcon.style.transform = "rotate(0deg)";
+                selectContainer.classList.remove("active");
+            } else {
+                dropdown.style.display = "block";
+                arrowIcon.style.transform = "rotate(180deg)";
+                selectContainer.classList.add("active");
+            }
+        }
+
+        function clearSearch() {
+            const isCheckedOutSelect = document.getElementById("isCheckedOutSelect");
+
+            isCheckedOutSelect.value = "unselected"
+
+
+            document.querySelector('input[name="deviceName"]').value = "";
+            document.querySelector('input[name="deviceType"]').value = "";
+            document.querySelector('input[name="rackRow"]').value = "";
+            document.querySelector('input[name="rackCol"]').value = "";
+            document.querySelector('input[name="caseId"]').value = "";
+            document.querySelector('input[name="studentId"]').value = "";
+        }
+    </script>
+</body>
+</html>

@@ -3,63 +3,219 @@
 @{
     ViewData["Title"] = "Index";
 }
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background-image: url('assets/splashbackdrop.png');
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-color: rgba(255, 255, 255, 1); /* Adjust the alpha (0.5) for the desired opacity */
+        }
 
-<form method="get" asp-action="Index">
-    <div class="row">
-        <div class="col-7" style="margin-right: 5px;">
-            <div class="form-group">
-                <h1>Students</h1>
+        div {
+            padding: 5px;
+        }
+
+        .tableForm {
+            background-color: rgba(255, 255, 255, .90); /* Adjust the alpha (0.5) for the desired opacity */
+        }
+
+        .dropbtn {
+            background-color: #3498DB;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+            .dropbtn:hover, .dropbtn:focus {
+                background-color: #2980B9;
+            }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            overflow: auto;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
+
+        .dropdown a:hover {
+            background-color: #115d39;
+        }
+
+        /* Add this CSS to your existing styles */
+        #arrowIcon {
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid #fff; /* Set the color of the arrow to match your button's background */
+            margin-left: 5px; /* Adjust the margin to position the arrow correctly */
+            transition: transform 0.3s; /* Add a smooth transition for the arrow icon */
+        }
+
+        .dropbtn.active #arrowIcon {
+            transform: rotate(180deg); /* Rotate the arrow 180 degrees when active */
+        }
+
+        .show {
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="tableForm">
+        <form method="get" asp-action="Index">
+            <div class="row" style="width: 100%; flex-wrap: nowrap">
+                <div class="col-7" style="margin-right: 5px;">
+                    <div class="form-group">
+                        <h1>Students</h1>
+                    </div>
+                </div>
+                <div class="col-5" style="display: flex; justify-content: flex-end;">
+                    <div class="dropdown" style="margin-left: auto;">
+                        <div style="display: flex">
+                            <a asp-action="Create" class="btn btn-success">Create New</a>
+                            <button id="dropdownButton" class="dropbtn" style="border-radius: 0.25rem; padding: 7.5px">
+                                Search <span id="arrowIcon"></span>
+                            </button>
+                        </div>
+                        <div id="myDropdown" class="dropdown-content" style="padding: 10px; width: 250px">
+                            @if (ViewData.ContainsKey("userName"))
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    Username: <input type="text" name="userName" class="form-control" placeholder="Username..." value="@ViewData["userName"]" />
+                                </div>
+                            }
+                            else
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    Username: <input type="text" name="userName" class="form-control" placeholder="Username..." />
+                                </div>
+                            }
+                            @if (ViewData.ContainsKey("firstName"))
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    First Name: <input type="text" name="firstName" class="form-control" placeholder="First Name..." value="@ViewData["firstName"]" />
+                                </div>
+
+                            }
+                            else
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    First Name: <input type="text" name="firstName" class="form-control" placeholder="First Name..." />
+                                </div>
+                            }
+                            @if (ViewData.ContainsKey("lastName"))
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    Last Name: <input type="text" name="lastName" class="form-control" placeholder="Last Name..." value="@ViewData["lastName"]" />
+                                </div>
+                            }
+                            else
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    Last Name: <input type="text" name="lastName" class="form-control" placeholder="Last Name..." />
+                                </div>
+                            }
+
+                            <button type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">Search</button>
+                            <button type="submit" class="btn btn-secondary btn-block" onclick="clearSearch()" style="margin-top: 10px;">Reset</button>
+
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col-2">
-            <div class="form-group">
-                <input type="text" name="searchString" class="form-control" placeholder="Search by Username" />
-            </div>
-        </div>
-        <div class="col-1">
-            <button type="submit" class="btn btn-primary btn-block">Search</button>
-        </div>
+        </form>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Username)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FirstName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.LastName)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Username)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FirstName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LastName)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.StudentId"
+                               class="btn btn-primary">Edit</a>
+                            <a asp-action="Details" asp-route-id="@item.StudentId"
+                               class="btn btn-secondary">Details</a>
+                            <a asp-action="Delete" asp-route-id="@item.StudentId"
+                               class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
-</form>
-<p>
-    <a asp-action="Create" class="btn btn-success">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Username)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastName)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Username)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                    <a asp-action="Edit" asp-route-id="@item.StudentId"
-                       class="btn btn-primary">Edit</a>
-                    <a asp-action="Details" asp-route-id="@item.StudentId"
-                       class="btn btn-secondary">Details</a>
-                    <a asp-action="Delete" asp-route-id="@item.StudentId"
-                       class="btn btn-danger">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+    <script>
+        var searchValues = {};
+        document.getElementById("dropdownButton").addEventListener("click", function (event) {
+            event.preventDefault();
+            toggleDropdown();
+        });
+
+        function toggleDropdown() {
+            var dropdown = document.getElementById("myDropdown");
+            var button = document.getElementById("dropdownButton");
+
+            if (dropdown.classList.contains("show")) {
+                dropdown.classList.remove("show");
+                button.classList.remove("active");
+            } else {
+                dropdown.classList.add("show");
+                button.classList.add("active");
+            }
+        }
+
+        function clearSearch() {
+            document.querySelector('input[name="userName"]').value = "";
+            document.querySelector('input[name="firstName"]').value = "";
+            document.querySelector('input[name="lastName"]').value = "";
+        }
+    </script>
+
+</body>
+</html>

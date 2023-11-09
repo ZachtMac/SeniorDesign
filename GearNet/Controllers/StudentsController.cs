@@ -20,16 +20,32 @@ namespace GearNet.Controllers
         }
 
         // GET: Students
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string? userName, string? firstName, string? lastName)
         {
             var students = _context.Students.AsQueryable();
-            if (!string.IsNullOrEmpty(searchString))
+
+            if (!string.IsNullOrEmpty(userName))
             {
-                students = students.Where(c => c.Username.Contains(searchString));
+                students = students.Where(c => c.Username.Contains(userName));
             }
+
+            if (!string.IsNullOrEmpty(firstName))
+            {
+                students = students.Where(c => c.FirstName.Contains(firstName));
+            }
+
+            if (!string.IsNullOrEmpty(lastName))
+            {
+                students = students.Where(c => c.LastName.Contains(lastName));
+            }
+
+            ViewData["userName"] = userName;
+            ViewData["firstName"] = firstName;
+            ViewData["lastName"] = lastName;
 
             return View(await students.ToListAsync());
         }
+
 
         // GET: Students/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -154,14 +170,14 @@ namespace GearNet.Controllers
             {
                 _context.Students.Remove(student);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool StudentExists(int id)
         {
-          return (_context.Students?.Any(e => e.StudentId == id)).GetValueOrDefault();
+            return (_context.Students?.Any(e => e.StudentId == id)).GetValueOrDefault();
         }
     }
 }

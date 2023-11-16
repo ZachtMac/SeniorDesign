@@ -205,11 +205,14 @@ namespace GearNet.Controllers
             var devices = _context.Devices.AsQueryable();
             var bookedDevices = _httpContextAccessor.HttpContext.Session.GetObjectFromJson<List<Device>>("BookedDevices") ?? new List<Device>();
             ViewBag.CaseId = id;
+            
 
             var case_ = await _context.Cases
                 .FirstOrDefaultAsync(m => m.CaseId == id);
 
             var caseName = case_?.CaseName;
+
+            ViewBag.CaseName = caseName;
 
 
             if (!string.IsNullOrEmpty(deviceName))
@@ -270,7 +273,7 @@ namespace GearNet.Controllers
                 if (bookedDevices.Any(d => d.DeviceId == deviceToAdd.DeviceId))
                 {
                     TempData["ErrorMessage"] = "Device is already booked!";
-                    return RedirectToAction("DeviceBooking", "Devices"); // Redirect back to the device booking page with an error message
+                    return RedirectToAction("DeviceBooking", new { id = caseId }); // Redirect back to the device booking page with an error message
                 }
 
                 bookedDevices.Add(deviceToAdd);

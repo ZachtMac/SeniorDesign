@@ -4,6 +4,7 @@ using GearNet.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,13 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GearNet.Migrations
 {
     [DbContext(typeof(GearNetContext))]
-    partial class GearNetContextModelSnapshot : ModelSnapshot
+    [Migration("20231027184531_RemoveIntMaxLength")]
+    partial class RemoveIntMaxLength
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.13")
+                .HasAnnotation("ProductVersion", "7.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -31,7 +34,6 @@ namespace GearNet.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CaseId"));
 
                     b.Property<string>("CaseName")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -39,21 +41,16 @@ namespace GearNet.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<double?>("Duration")
-                        .IsRequired()
                         .HasColumnType("float");
 
                     b.Property<int?>("StudentId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("CaseId");
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("Cases", (string)null);
+                    b.ToTable("Cases");
                 });
 
             modelBuilder.Entity("GearNet.Entities.Device", b =>
@@ -68,12 +65,10 @@ namespace GearNet.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DeviceName")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("DeviceType")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -107,7 +102,7 @@ namespace GearNet.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("Devices", (string)null);
+                    b.ToTable("Devices");
                 });
 
             modelBuilder.Entity("GearNet.Entities.Student", b =>
@@ -132,7 +127,7 @@ namespace GearNet.Migrations
 
                     b.HasKey("StudentId");
 
-                    b.ToTable("Students", (string)null);
+                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("GearNet.Entities.Case", b =>

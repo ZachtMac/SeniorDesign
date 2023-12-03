@@ -7,17 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GearNet.Data;
 using GearNet.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.CodeAnalysis.Operations;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json.Serialization;
+using GearNet.Models;
+using NuGet.Packaging;
 
 namespace GearNet.Controllers
 {
     public class DevicesController : Controller
     {
         private readonly GearNetContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public DevicesController(GearNetContext context)
+        public DevicesController(GearNetContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<IActionResult> Index(string deviceName, string deviceType, int? rackRow, int? rackCol, string? isCheckedOut)
@@ -192,9 +199,154 @@ namespace GearNet.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: Devices/DeviceBooking/5
+        public async Task<IActionResult> DeviceBooking(int id, string? deviceName, string? deviceType, int? rackRow, int? rackCol, string? isCheckedOut)
+        {
+            var devices = _context.Devices.AsQueryable();
+            var bookedDevices = _httpContextAccessor.HttpContext.Session.GetObjectFromJson<List<Device>>("BookedDevices") ?? new List<Device>();
+            ViewBag.CaseId = id;
+            
+
+            var case_ = await _context.Cases
+                .FirstOrDefaultAsync(m => m.CaseId == id);
+
+            var caseName = case_?.CaseName;
+
+            ViewBag.CaseName = caseName;
+
+
+            if (!string.IsNullOrEmpty(deviceName))
+            {
+                devices = devices.Where(c => c.DeviceName.Contains(deviceName));
+            }
+
+            if (!string.IsNullOrEmpty(deviceType))
+            {
+                devices = devices.Where(c => c.DeviceType.Contains(deviceType));
+            }
+
+            if (rackRow.HasValue)
+            {
+                devices = devices.Where(c => c.RackRow == rackRow);
+            }
+
+            if (rackCol.HasValue)
+            {
+                devices = devices.Where(c => c.RackCol == rackCol);
+            }
+
+            if (!string.IsNullOrEmpty(isCheckedOut))
+            {
+                if (bool.TryParse(isCheckedOut, out bool isCheckedOutValue))
+                {
+                    devices = devices.Where(c => c.IsCheckedOut == isCheckedOutValue);
+                }
+            }
+
+            // Pass the search parameters as route values
+            ViewData["deviceName"] = deviceName;
+            ViewData["deviceType"] = deviceType;
+            ViewData["rackRow"] = rackRow;
+            ViewData["rackCol"] = rackCol;
+            ViewData["isCheckedOut"] = isCheckedOut;
+            ViewData["BookedDevices"] = bookedDevices;
+            
+
+
+            return View(await devices.ToListAsync());
+        }
+
         private bool DeviceExists(int id)
         {
           return (_context.Devices?.Any(e => e.DeviceId == id)).GetValueOrDefault();
         }
+
+
+        [HttpPost]
+        public IActionResult AddToBookedDevices(int id, int caseId)
+        {
+            var deviceToAdd = _context.Devices.FirstOrDefault(d => d.DeviceId == id);
+            if (deviceToAdd != null)
+            {
+                var bookedDevices = _httpContextAccessor.HttpContext.Session.GetObjectFromJson<List<Device>>("BookedDevices") ?? new List<Device>();
+
+                if (bookedDevices.Any(d => d.DeviceId == deviceToAdd.DeviceId))
+                {
+                    TempData["ErrorMessage"] = "Device is already booked!";
+                    return RedirectToAction("DeviceBooking", new { id = caseId }); // Redirect back to the device booking page with an error message
+                }
+
+                bookedDevices.Add(deviceToAdd);
+
+                _httpContextAccessor.HttpContext.Session.SetObjectAsJson("BookedDevices", bookedDevices);
+            }
+
+            return RedirectToAction("DeviceBooking", new { id = caseId }); // Redirect back to the device booking page
+        }
+
+        [HttpPost]
+        public IActionResult RemoveFromBookedDevices(int id, int caseId)
+        {
+            var bookedDevices = _httpContextAccessor.HttpContext.Session.GetObjectFromJson<List<Device>>("BookedDevices") ?? new List<Device>();
+            var deviceToRemove = bookedDevices.FirstOrDefault(d => d.DeviceId == id);
+            if (deviceToRemove != null)
+            {
+                bookedDevices.Remove(deviceToRemove);
+                _httpContextAccessor.HttpContext.Session.SetObjectAsJson("BookedDevices", bookedDevices);
+            }
+
+            return RedirectToAction("DeviceBooking", new { id = caseId }); // Redirect back to the device booking page
+        }
+
+        [HttpPost]
+        public IActionResult ClearBookedDevicesSession()
+        {
+            
+            _httpContextAccessor.HttpContext.Session.Remove("BookedDevices");
+            return Ok();
+            
+        }
+
+        [HttpGet]
+        public IActionResult GetBookedDevices()
+        {
+            var bookedDevices = _httpContextAccessor.HttpContext.Session.GetObjectFromJson<List<Device>>("BookedDevices") ?? new List<Device>();
+
+            var deviceIds = bookedDevices.Select(device => device.DeviceId).ToList();
+            return Json(deviceIds);
+        }
+
+        [HttpPost("cases/devices/checkout")]
+        public IActionResult CheckOutDevices(int caseId, string deviceIds)
+        {
+            List<int> deviceIdsList = deviceIds
+                .Split(',', StringSplitOptions.RemoveEmptyEntries) // Split by comma and remove empty entries
+                .Select(id => id.Trim('[', ']', ' ')) // Clean each string
+                .Select(id => int.TryParse(id, out int parsedId) ? parsedId : -1) // Parse and handle errors
+                .Where(parsedId => parsedId != -1) // Filter out failed parsing results
+                .ToList();
+
+            var devicesToCheckout = _context.Devices.Where(d => deviceIdsList.Contains(d.DeviceId)).ToList();
+
+            var caseToUpdate = _context.Cases.FirstOrDefault(c => c.CaseId == caseId);
+
+            if (caseToUpdate != null)
+            {
+                foreach (var device in devicesToCheckout)
+                {
+                    device.IsCheckedOut = true;
+                    device.StudentId = caseToUpdate.StudentId;
+                }
+                caseToUpdate.Devices.AddRange(devicesToCheckout);
+                _context.SaveChanges();
+            }
+            ClearBookedDevicesSession();
+            // Redirect to the case details page using the same caseId
+            return RedirectToAction("Details", "Cases", new { id = caseId });
+        }
+
+
+
+
     }
 }

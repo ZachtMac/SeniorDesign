@@ -63,13 +63,15 @@ namespace GearNet.Controllers
         // GET: Cases/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Cases == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
             var case_ = await _context.Cases
+                .Include(c => c.Devices)
                 .FirstOrDefaultAsync(m => m.CaseId == id);
+
             if (case_ == null)
             {
                 return NotFound();
@@ -200,6 +202,49 @@ namespace GearNet.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
+        // GET: Cases
+        public async Task<IActionResult> CaseSelection(string? caseName, DateTime? startDate, DateTime? endDate, int? duration, string? studentUser)
+        {
+            var cases = _context.Cases.AsQueryable();
+
+            if (!string.IsNullOrEmpty(caseName))
+            {
+                cases = cases.Where(c => c.CaseName.Contains(caseName));
+            }
+
+            if (startDate.HasValue)
+            {
+                cases = cases.Where(c => c.DateTime >= startDate.Value.Date);
+            }
+
+            if (endDate.HasValue)
+            {
+                // Include records on the end date by adding a day to the endDate
+                var adjustedEndDate = endDate.Value.Date.AddDays(1);
+                cases = cases.Where(c => c.DateTime < adjustedEndDate);
+            }
+
+            if (duration.HasValue)
+            {
+                cases = cases.Where(c => c.Duration == duration);
+            }
+
+            if (!string.IsNullOrEmpty(studentUser))
+            {
+                cases = cases.Where(c => c.Username.Contains(studentUser));
+            }
+
+            ViewData["caseName"] = caseName;
+            ViewData["startDate"] = startDate.HasValue ? startDate.Value.ToString("yyyy-MM-dd") : null;
+            ViewData["endDate"] = endDate.HasValue ? endDate.Value.ToString("yyyy-MM-dd") : null;
+            ViewData["duration"] = duration;
+            ViewData["studentUser"] = studentUser;
+
+            return View(await cases.ToListAsync());
+        }
+
 
         private bool CaseExists(int id)
         {

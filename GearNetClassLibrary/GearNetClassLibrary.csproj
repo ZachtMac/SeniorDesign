@@ -9,6 +9,8 @@
   <ItemGroup>
     <Folder Include="Entities\" />
     <Folder Include="Migrations\" />
+	<Content Include="Startup.cs" />
+	<None Remove ="Startup.cs" />
   </ItemGroup>
 
   <ItemGroup>

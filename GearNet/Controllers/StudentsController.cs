@@ -72,14 +72,19 @@ namespace GearNet.Controllers
         }
 
         // POST: Students/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("StudentId,Username,FirstName,LastName")] Student student)
         {
             if (ModelState.IsValid)
             {
+                // Check if the username is already taken
+                if (_context.Students.Any(s => s.Username == student.Username))
+                {
+                    // If the username is already taken, add a model error
+                    ModelState.AddModelError("Username", "Username is already taken");
+                    return View(student);
+                }
                 _context.Add(student);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

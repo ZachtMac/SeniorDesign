@@ -1,0 +1,492 @@
+﻿@model IEnumerable<GearNet.Entities.Device>
+
+@{
+    ViewData["Title"] = "DeviceBooking";
+}
+
+<h1>Device Booking for @ViewBag.CaseName</h1>
+
+<form method="get" asp-action="DeviceBooking">
+    <div class="row" style="width: 100%; flex-wrap: nowrap">
+        <div class="col-7" style="margin-right: 5px;">
+            <div class="form-group">
+                <h1>Devices</h1>
+            </div>
+        </div>
+        <div class="col-5" style="display: flex; justify-content: flex-end;">
+            <div class="dropdown" style="margin-left: auto;">
+                <div style="display: flex">
+                    <button id="dropdownButton" class="dropbtn" style="border-radius: 0.25rem; padding: 7.5px">
+                        Search <span id="arrowIcon"></span>
+                    </button>
+                </div>
+                <div id="myDropdown" class="dropdown-content" style="padding: 10px; width: 250px">
+                    @if (ViewData.ContainsKey("deviceName"))
+                    {
+                        <div style="margin-bottom: 10px;">
+                            Name: <input type="text" name="deviceName" class="form-control" placeholder="Device Name..." value="@ViewData["deviceName"]" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="margin-bottom: 10px;">
+                            Name: <input type="text" name="deviceName" class="form-control" placeholder="Device Name..." />
+                        </div>
+                    }
+                    @if (ViewData.ContainsKey("deviceType"))
+                    {
+                        <div style="margin-bottom: 10px;">
+                            Type: <input type="text" name="deviceType" class="form-control" placeholder="Device Type..." value="@ViewData["deviceType"]" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="margin-bottom: 10px;">
+                            Type: <input type="text" name="deviceType" class="form-control" placeholder="Device Type..." />
+                        </div>
+                    }
+
+                    @if (ViewData.ContainsKey("rackRow"))
+                    {
+                        <div style="margin-bottom: 10px;">
+                            Row: <input type="number" name="rackRow" class="form-control" placeholder="Rack Row..." value="@ViewData["rackRow"]" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="margin-bottom: 10px;">
+                            Row: <input type="number" name="rackRow" class="form-control" placeholder="Rack Row..." />
+                        </div>
+                    }
+
+                    @if (ViewData.ContainsKey("rackCol"))
+                    {
+                        <div style="margin-bottom: 10px;">
+                            Column: <input type="number" name="rackCol" class="form-control" placeholder="Rack Column..." value="@ViewData["rackCol"]" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="margin-bottom: 10px;">
+                            Column: <input type="number" name="rackCol" class="form-control" placeholder="Rack Column..." />
+                        </div>
+                    }
+                    <div style="margin-bottom: 10px;" class="dropdown-select">
+                        Checked Out:
+                        <select id="isCheckedOutSelect" name="isCheckedOut" class="form-control">
+                            <option style="color: grey" value="unselected" selected='@((string)ViewData["isCheckedOut"] == "unselected" ? "selected" : null)'>(Select All)</option>
+                            <option value="true" selected='@((string)ViewData["isCheckedOut"] == "true" ? "selected" : null)'>True</option>
+                            <option value="false" selected='@((string)ViewData["isCheckedOut"] == "false" ? "selected" : null)'>False</option>
+                        </select>
+                    </div>
+
+
+
+                    <button type="submit" class="btn btn-primary btn-block" onclick="" style="margin-top: 10px;">Search</button>
+                    <button type="submit" class="btn btn-secondary btn-block" onclick="clearSearch()" style="margin-top: 10px;">Reset</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<table class="table">
+    <thead>
+        
+            
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DeviceName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeviceType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OperatingSystem)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Vendor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SoftwareVersion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RackRow)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RackCol)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsCheckedOut)
+            </th>
+            <th></th>
+                
+        </tr>
+        
+    </thead>
+    <tbody>
+@foreach (var device in Model) {
+            @if (device.IsCheckedOut == null || device.IsCheckedOut == false)
+            {
+                
+            <tr>
+            <td>
+                @Html.DisplayFor(modelItem => device.DeviceName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => device.DeviceType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => device.OperatingSystem)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => device.Vendor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => device.SoftwareVersion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => device.RackRow)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => device.RackCol)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => device.IsCheckedOut)
+            </td>
+            <td>
+                
+                 
+                        <form asp-controller="Devices" asp-action="AddToBookedDevices" method="post">
+                                @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@device.DeviceId" />
+                            <input type="hidden" name="caseId" value="@ViewBag.CaseId" />
+                            <button type="submit" class="btn btn-primary">Book</button>
+                        </form>
+
+                        
+                
+            </td>
+        </tr>
+            }
+}
+    </tbody>
+</table>
+@if (!string.IsNullOrEmpty(TempData["ErrorMessage"]?.ToString()))
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<h2>Devices to Book</h2>
+<p>Visit "Cases" tab to remove a device</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DeviceName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeviceType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OperatingSystem)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Vendor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SoftwareVersion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RackRow)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RackCol)
+            </th>
+            <th></th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var bookedDevice in ViewData["BookedDevices"] as List<GearNet.Entities.Device>)
+        {
+            <tr>
+                <td>@bookedDevice.DeviceName</td>
+                <td>@bookedDevice.DeviceType</td>
+                <td>@bookedDevice.OperatingSystem</td>
+                <td>@bookedDevice.Vendor</td>
+                <td>@bookedDevice.SoftwareVersion</td>
+                <td>@bookedDevice.RackRow</td>
+                <td>@bookedDevice.RackCol</td>
+                <td>
+                    
+                        <form asp-controller="Devices" asp-action="RemoveFromBookedDevices" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@bookedDevice.DeviceId" />
+                            <input type="hidden" name="caseId" value="@ViewBag.CaseId" /> 
+                            <button type="submit" class="btn btn-danger">Remove</button>
+                        </form>
+                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<form id="checkoutForm" action="/cases/devices/checkout" method="post">
+    <input type="hidden" name="caseId" value="@ViewBag.CaseId" />
+    <input type="hidden" name="deviceIds" id="deviceIdsInput" />
+    <button type="submit" class="btn btn-primary">Check Out Devices</button>
+</form>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function clearBookedDevicesSession() {
+        $.ajax({
+            url: '/Devices/ClearBookedDevicesSession',
+            type: 'POST',
+            success: function (response) {
+                // Handle success (if needed)
+                console.log('Session cleared successfully');
+            },
+            error: function (xhr, status, error) {
+                // Handle error (if needed)
+                console.error('Error clearing session:', error);
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        var isRefresh = false;
+
+        // Check if this page is loaded from a refresh
+        if (sessionStorage.getItem('isRefreshed')) {
+            isRefresh = true;
+            sessionStorage.removeItem('isRefreshed');
+        }
+
+        // Set a flag in sessionStorage indicating a page refresh
+        $(window).on('beforeunload', function (event) {
+            sessionStorage.setItem('isRefreshed', 'true');
+        });
+
+        // Prevent session clearing if the page is refreshed
+        $(window).on('beforeunload', function (event) {
+            if (isRefresh) {
+                return; // If refreshed, do not trigger session clearing
+            }
+        });
+
+        // Track navigation to DeviceBooking
+        $(document).on('click', 'a', function () {
+            var href = $(this).attr('href');
+            if (href !== '/DeviceBooking') {
+                clearBookedDevicesSession(); // Clear session on navigation away from DeviceBooking
+            }
+        });
+    });
+</script>
+
+
+
+
+
+<style>
+    body {
+        background-image: url('assets/splashbackdrop.png');
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-color: rgba(255, 255, 255, 1); /* Adjust the alpha (0.5) for the desired opacity */
+    }
+
+    div {
+        padding: 5px;
+    }
+
+    .tableForm {
+        background-color: rgba(255, 255, 255, .90); /* Adjust the alpha (0.5) for the desired opacity */
+    }
+
+    .dropbtn {
+        background-color: #3498DB;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+    }
+
+        .dropbtn:hover, .dropbtn:focus {
+            background-color: #2980B9;
+        }
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f1f1f1;
+        min-width: 160px;
+        overflow: auto;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+    .dropdown a:hover {
+        background-color: #115d39;
+    }
+
+    /* Add this CSS to your existing styles */
+    #arrowIcon {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid #fff; /* Set the color of the arrow to match your button's background */
+        margin-left: 5px; /* Adjust the margin to position the arrow correctly */
+        transition: transform 0.3s; /* Add a smooth transition for the arrow icon */
+    }
+
+    .grey-text {
+        color: grey;
+    }
+
+    .show {
+        display: block;
+    }
+
+    .arrow-down {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid #000;
+        transition: transform 0.3s;
+    }
+
+    .select-container {
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+        .select-container select {
+            width: 100%;
+        }
+
+        .select-container.active .arrow-down {
+            transform: rotate(180deg);
+        }
+
+
+    table {
+        background-color: rgba(255, 255, 255, 0); /* Adjust the alpha (0.5) for the desired opacity */
+    }
+
+</style>
+
+<script>
+    var searchValues = {};
+    document.getElementById("dropdownButton").addEventListener("click", function (event) {
+        event.preventDefault();
+        toggleDropdown();
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const isCheckedOutSelect = document.getElementById("isCheckedOutSelect");
+        isCheckedOutSelect.addEventListener("change", function () {
+            if (isCheckedOutSelect.value === "unselected") {
+                isCheckedOutSelect.classList.add("grey-text");
+            } else {
+                isCheckedOutSelect.classList.remove("grey-text");
+            }
+        });
+
+    });
+
+
+    function toggleDropdown() {
+        const isCheckedOutSelect = document.getElementById("isCheckedOutSelect");
+        var dropdown = document.getElementById("myDropdown");
+        var arrowIcon = document.getElementById("arrowIcon");
+        var selectContainer = document.querySelector(".select-container");
+
+        if (isCheckedOutSelect.value === "unselected") {
+            isCheckedOutSelect.classList.add("grey-text");
+        }
+
+        if (dropdown.style.display === "block") {
+            dropdown.style.display = "none";
+            arrowIcon.style.transform = "rotate(0deg)";
+            selectContainer.classList.remove("active");
+        } else {
+            dropdown.style.display = "block";
+            arrowIcon.style.transform = "rotate(180deg)";
+            selectContainer.classList.add("active");
+        }
+    }
+
+    function clearSearch() {
+        const isCheckedOutSelect = document.getElementById("isCheckedOutSelect");
+
+        isCheckedOutSelect.value = "unselected"
+
+
+        document.querySelector('input[name="deviceName"]').value = "";
+        document.querySelector('input[name="deviceType"]').value = "";
+        document.querySelector('input[name="rackRow"]').value = "";
+        document.querySelector('input[name="rackCol"]').value = "";
+        document.querySelector('input[name="caseId"]').value = "";
+        document.querySelector('input[name="studentId"]').value = "";
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#checkoutForm').submit(function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Reference the form
+            var form = $(this);
+
+            // Fetch device IDs using AJAX
+            $.ajax({
+                url: '/Devices/GetBookedDevices',
+                type: 'GET',
+                success: function (deviceIds) {
+                    console.log('Retrieved device IDs:', deviceIds);
+
+                    if (deviceIds.length > 0) {
+                        // Set deviceIds in a hidden input
+                        $('#deviceIdsInput').val(JSON.stringify(deviceIds));
+
+                        // Manually submit the form
+                        form.unbind('submit').submit();
+                    } else {
+                        console.error('No devices to check out.');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle error
+                    console.error('Error retrieving device IDs:', error);
+                }
+            });
+        });
+    });
+</script>

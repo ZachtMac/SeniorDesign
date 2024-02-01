@@ -115,19 +115,22 @@ namespace GearNet.Controllers
             return View(case_);
         }
 
-        // GET: Cases/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Cases == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var case_ = await _context.Cases.FindAsync(id);
+            var case_ = await _context.Cases
+                .Include(c => c.Devices) // Include the Devices navigation property
+                .FirstOrDefaultAsync(m => m.CaseId == id);
+
             if (case_ == null)
             {
                 return NotFound();
             }
+
             return View(case_);
         }
 
@@ -191,13 +194,24 @@ namespace GearNet.Controllers
         {
             if (_context.Cases == null)
             {
-                return Problem("Entity set 'GearNetContext.Cases'  is null.");
+                return Problem("Entity set 'GearNetContext.Cases' is null.");
             }
-            var case_ = await _context.Cases.FindAsync(id);
-            if (case_ != null)
+
+            var case_ = await _context.Cases.Include(c => c.Devices).FirstOrDefaultAsync(c => c.CaseId == id);
+
+            if (case_ == null)
             {
-                _context.Cases.Remove(case_);
+                return NotFound();
             }
+
+            foreach (var bookedDevice in case_.Devices)
+            {
+                bookedDevice.Case = null;
+                bookedDevice.IsCheckedOut = false;
+                bookedDevice.StudentId = null;
+            }
+
+            _context.Cases.Remove(case_);
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -249,6 +263,50 @@ namespace GearNet.Controllers
         private bool CaseExists(int id)
         {
             return (_context.Cases?.Any(e => e.CaseId == id)).GetValueOrDefault();
+        }
+
+
+        [HttpGet]
+        public IActionResult GetBookedDevicesForCase(int caseId)
+        {
+            var caseWithDevices = _context.Cases
+                .Include(c => c.Devices) 
+                .FirstOrDefault(c => c.CaseId == caseId);
+
+            if (caseWithDevices == null)
+            {
+                return NotFound(); 
+            }
+
+            var bookedDevices = caseWithDevices.Devices.ToList();
+
+            return Json(bookedDevices);
+        }
+
+        [HttpPost]
+        public IActionResult RemoveFromBookedDevices(int deviceId, int caseId)
+        {
+            var caseToUpdate = _context.Cases.Include(c => c.Devices).FirstOrDefault(c => c.CaseId == caseId);
+            if (caseToUpdate == null)
+            {
+                return NotFound(); 
+            }
+
+            var deviceToRemove = caseToUpdate.Devices.FirstOrDefault(d => d.DeviceId == deviceId);
+            if (deviceToRemove == null)
+            {
+                return NotFound(); 
+            }
+
+            deviceToRemove.IsCheckedOut = false;
+            deviceToRemove.StudentId = null;
+            deviceToRemove.CaseId = null;
+
+            caseToUpdate.Devices.Remove(deviceToRemove);
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Details", "Cases", new { id = caseId });
         }
     }
 }

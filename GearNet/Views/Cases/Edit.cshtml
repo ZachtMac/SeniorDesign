@@ -15,66 +15,36 @@
             <input type="hidden" asp-for="CaseId" />
             <div class="form-group">
                 <label asp-for="CaseName" class="control-label"></label>
-                <input asp-for="CaseName" class="form-control" />
+                <input data-testid="editCasename" asp-for="CaseName" class="form-control" />
                 <span asp-validation-for="CaseName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DateTime" class="control-label"></label>
-                <input asp-for="DateTime" class="form-control" />
+                <input data-testid="editStartDate" asp-for="DateTime" class="form-control" />
                 <span asp-validation-for="DateTime" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Duration" class="control-label"></label>
-                <input asp-for="Duration" class="form-control" />
+                <input data-testid="editDuration" asp-for="Duration" class="form-control" />
                 <span asp-validation-for="Duration" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Username" class="control-label"></label>
-                <input type="text" id="Username" name="Username" class="form-control" asp-for="Username" />
+                <input data-testid="editUsername" type="text" id="Username" name="Username" class="form-control" asp-for="Username" />
                 <span asp-validation-for="Username" class="text-danger"></span>
             </div>
             <div class="form-group" style="flex-direction: row; margin-top: 15px;">
                 <a asp-action="Details"
+                   data-testid="cancelEdit"
                    asp-route-id="@Model?.CaseId"
                    class="btn btn-secondary mr-2"
                    style="margin-right: 5px;">Cancel</a>
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input data-testid="editCase" type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
-<!-- Table to display booked devices -->
-<div class="row">
-    <div class="col-md-12">
-        <h4>Booked Devices</h4>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Device Name</th>
-                    <th>Device Type</th>
-                    <th></th> <!-- Column for remove button -->
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var device in Model.Devices)
-                {
-                    <tr>
-                        <td>@device.DeviceName</td>
-                        <td>@device.DeviceType</td>
-                        <td>
-                            <form asp-controller="Cases" asp-action="RemoveFromBookedDevices" method="post">
-                                <input type="hidden" name="deviceId" value="@device.DeviceId" />
-                                <input type="hidden" name="caseId" value="@Model.CaseId" />
-                                <button type="submit" class="btn btn-danger">Remove</button>
-                            </form>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div>
 
 @section Scripts {
     @{

@@ -296,7 +296,6 @@
 
 <style>
     body {
-        background-image: url('assets/splashbackdrop.png');
         background-size: 100% 100%;
         background-repeat: no-repeat;
         background-attachment: fixed;
@@ -472,9 +471,9 @@
                 success: function (deviceIds) {
                     console.log('Retrieved device IDs:', deviceIds);
 
-                    if (deviceIds.length > 0) {
+                    if (deviceIds.$values.length > 0) {
                         // Set deviceIds in a hidden input
-                        $('#deviceIdsInput').val(JSON.stringify(deviceIds));
+                        $('#deviceIdsInput').val(JSON.stringify(deviceIds.$values));
 
                         // Manually submit the form
                         form.unbind('submit').submit();

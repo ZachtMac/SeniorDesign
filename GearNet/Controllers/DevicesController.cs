@@ -16,6 +16,65 @@ using NuGet.Packaging;
 
 namespace GearNet.Controllers
 {
+    [Route("api/DevicesApi")]
+    [ApiController]
+    public class DevicesApiController : ControllerBase
+    {
+        private readonly GearNetContext _context;
+
+        public DevicesApiController(GearNetContext context)
+        {
+            _context = context;
+        }
+
+        // GET: api/DevicesApi/GetAll
+        [HttpGet("GetAll")]
+        public async Task<ActionResult<IEnumerable<Device>>> GetAll()
+        {
+            return await _context.Devices.ToListAsync();
+        }
+
+        // GET: api/DevicesApi/Get/5
+        [HttpGet("Get/{id}")]
+        public async Task<ActionResult<Device>> GetDevice(int id)
+        {
+            var device = await _context.Devices.FindAsync(id);
+
+            if (device == null)
+            {
+                return NotFound();
+            }
+
+            return device;
+        }
+
+        // POST: api/DevicesApi/Create
+        [HttpPost("Create")]
+        public async Task<ActionResult<Device>> Create(Device device)
+        {
+            _context.Devices.Add(device);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetDevice), new { id = device.DeviceId }, device);
+        }
+
+        // DELETE: api/DevicesApi/Delete/5
+        [HttpDelete("Delete/{id}")]
+        public async Task<IActionResult> DeleteDevice(int id)
+        {
+            var device = await _context.Devices.FindAsync(id);
+            if (device == null)
+            {
+                return NotFound();
+            }
+
+            _context.Devices.Remove(device);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+    }
+
     public class DevicesController : Controller
     {
         private readonly GearNetContext _context;
@@ -74,13 +133,16 @@ namespace GearNet.Controllers
         // GET: Devices/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Devices == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
             var device = await _context.Devices
+                .Include(d => d.Case)
+                .Include(d => d.Student)
                 .FirstOrDefaultAsync(m => m.DeviceId == id);
+
             if (device == null)
             {
                 return NotFound();
@@ -88,6 +150,7 @@ namespace GearNet.Controllers
 
             return View(device);
         }
+
 
         // GET: Devices/Create
         public IActionResult Create()
@@ -194,7 +257,7 @@ namespace GearNet.Controllers
             {
                 _context.Devices.Remove(device);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -205,7 +268,7 @@ namespace GearNet.Controllers
             var devices = _context.Devices.AsQueryable();
             var bookedDevices = _httpContextAccessor.HttpContext.Session.GetObjectFromJson<List<Device>>("BookedDevices") ?? new List<Device>();
             ViewBag.CaseId = id;
-            
+
 
             var case_ = await _context.Cases
                 .FirstOrDefaultAsync(m => m.CaseId == id);
@@ -250,7 +313,7 @@ namespace GearNet.Controllers
             ViewData["rackCol"] = rackCol;
             ViewData["isCheckedOut"] = isCheckedOut;
             ViewData["BookedDevices"] = bookedDevices;
-            
+
 
 
             return View(await devices.ToListAsync());
@@ -258,7 +321,7 @@ namespace GearNet.Controllers
 
         private bool DeviceExists(int id)
         {
-          return (_context.Devices?.Any(e => e.DeviceId == id)).GetValueOrDefault();
+            return (_context.Devices?.Any(e => e.DeviceId == id)).GetValueOrDefault();
         }
 
 
@@ -301,10 +364,10 @@ namespace GearNet.Controllers
         [HttpPost]
         public IActionResult ClearBookedDevicesSession()
         {
-            
+
             _httpContextAccessor.HttpContext.Session.Remove("BookedDevices");
             return Ok();
-            
+
         }
 
         [HttpGet]

@@ -49,15 +49,6 @@
                                 {
                                     <input type="date" name="startDate" class="form-control" placeholder="" />
                                 }
-                                End:
-                                @if (ViewData.ContainsKey("endDate"))
-                                {
-                                    <input type="date" name="endDate" class="form-control" placeholder="" value="@ViewData["endDate"]" />
-                                }
-                                else
-                                {
-                                    <input type="date" name="endDate" class="form-control" placeholder="" />
-                                }
                             </div>
 
 
@@ -179,14 +170,13 @@
         function clearSearch() {
             document.querySelector('input[name="caseName"]').value = "";
             document.querySelector('input[name="startDate"]').value = "";
-            document.querySelector('input[name="endDate"]').value = "";
             document.querySelector('input[name="duration"]').value = "";
             document.querySelector('input[name="studentUser"]').value = "";
         }
     </script>
     <style>
         body {
-            background-image: url('assets/splashbackdrop.png');
+            
             background-size: 100% 100%;
             background-repeat: no-repeat;
             background-attachment: fixed;

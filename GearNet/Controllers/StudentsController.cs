@@ -10,6 +10,110 @@ using GearNet.Entities;
 
 namespace GearNet.Controllers
 {
+
+    [Route("api/StudentsApi")]
+    [ApiController]
+    public class StudentsApiController : ControllerBase
+    {
+        private readonly GearNetContext _context;
+
+        public StudentsApiController(GearNetContext context)
+        {
+            _context = context;
+        }
+
+        // POST: api/StudentsApi/Create
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create([FromBody] Student student)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    // Check if the username is already taken
+                    if (_context.Students.Any(s => s.Username == student.Username))
+                    {
+                        return Conflict(new { message = "Username is already taken" });
+                    }
+
+                    // Additional validation for username length
+                    if (student.Username?.Length > 10)
+                    {
+                        return BadRequest(new { message = "Username must be at most 10 characters long" });
+                    }
+
+                    // Additional validation for first name length
+                    if (student.FirstName?.Length > 50)
+                    {
+                        return BadRequest(new { message = "First name must be at most 50 characters long" });
+                    }
+
+                    // Additional validation for last name length
+                    if (student.LastName?.Length > 50)
+                    {
+                        return BadRequest(new { message = "Last name must be at most 50 characters long" });
+                    }
+
+                    _context.Add(student);
+                    await _context.SaveChangesAsync();
+                    return Ok(student);
+                }
+                return BadRequest(ModelState);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        // GET: api/StudentsApi/GetAll
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAll()
+        {
+            var students = await _context.Students.ToListAsync();
+            return Ok(students);
+        }
+
+
+        // GET: api/StudentsApi/Get/5
+        [HttpGet("Get/{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            var student = await _context.Students.FindAsync(id);
+            if (student == null)
+            {
+                return NotFound();
+            }
+            return Ok(student);
+        }
+
+        // DELETE: api/StudentsApi/Delete/5
+        [HttpDelete("Delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var student = await _context.Students.FindAsync(id);
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            // Check if the student is part of a case
+            var isPartOfCase = _context.Cases.Any(c => c.StudentId == id);
+            if (isPartOfCase)
+            {
+                // If the student is part of a case, return a BadRequest with a custom message
+                return BadRequest("The student is part of a case and cannot be deleted.");
+            }
+
+            _context.Students.Remove(student);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+
+    }
+
     public class StudentsController : Controller
     {
         private readonly GearNetContext _context;
@@ -85,6 +189,24 @@ namespace GearNet.Controllers
                     ModelState.AddModelError("Username", "Username is already taken");
                     return View(student);
                 }
+                // Additional validation for username length
+                if (student.Username?.Length > 10)
+                {
+                    return BadRequest(new { message = "Username must be at most 10 characters long" });
+                }
+
+                // Additional validation for first name length
+                if (student.FirstName?.Length > 50)
+                {
+                    return BadRequest(new { message = "First name must be at most 50 characters long" });
+                }
+
+                // Additional validation for last name length
+                if (student.LastName?.Length > 50)
+                {
+                    return BadRequest(new { message = "Last name must be at most 50 characters long" });
+                }
+
                 _context.Add(student);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -173,12 +295,21 @@ namespace GearNet.Controllers
             var student = await _context.Students.FindAsync(id);
             if (student != null)
             {
+                // Check if the student is part of a case
+                var isPartOfCase = _context.Cases.Any(c => c.StudentId == id);
+                if (isPartOfCase)
+                {
+                    // Add an error to the ModelState and return to the view
+                    ModelState.AddModelError("Student", "The student is part of a case and cannot be deleted.");
+                    return View(student);
+                }
                 _context.Students.Remove(student);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
 
         private bool StudentExists(int id)
         {

@@ -13,20 +13,20 @@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.DeviceName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd data-testid="deviceName" class = "col-sm-10">
             @Html.DisplayFor(model => model.DeviceName)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.DeviceType)
         </dt>
-        <dd class = "col-sm-10">
+        <dd data-testid="deviceType" class = "col-sm-10">
             @Html.DisplayFor(model => model.DeviceType)
         </dd>
         <dt class="col-sm-2">
             Checked Out
             @* @Html.DisplayNameFor(model => model.IsCheckedOut) *@
         </dt>
-        <dd class="col-sm-10">
+        <dd data-testid="checkedOut" class="col-sm-10">
             @Model.IsCheckedOut.ToString()
         </dd>
         </dd>
@@ -34,8 +34,8 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="DeviceId" />
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-        <input type="submit" value="Delete" class="btn btn-danger" />
+        <a data-testid="cancelDelete" asp-action="Index" class="btn btn-secondary">Cancel</a>
+        <input data-testid="deleteDevice" type="submit" value="Delete" class="btn btn-danger" />
     </form>
 </div>
 

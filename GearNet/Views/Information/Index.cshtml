@@ -3,7 +3,7 @@
 <head>
     <style>
         body {
-            background-image: url('assets/splashbackdrop.png');
+            
             background-size: 100% 100%;
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -75,15 +75,15 @@
     </script>
 </head>
 <body>
-    <div class="wikiForm">
+    <div class="wikiForm" data-testid="infoHub_body">
         <!-- Sidebar (20% width) -->
-        <div class="sidebar">
-            <a href="javascript:void(0);" class="sidebar-link active" onclick="loadContent('home-content', this)">Home</a>
-            <a href="javascript:void(0);" class="sidebar-link" onclick="loadContent('acceptable-use-content', this)">Acceptable Use</a>
+        <div class="sidebar" data-testid="infoHub_sidebar">
+            <a data-testid="home_tab" href="javascript:void(0);" class="sidebar-link active" onclick="loadContent('home-content', this)">Home</a>
+            <a data-testid="acceptUse_tab" href="javascript:void(0);" class="sidebar-link" onclick="loadContent('acceptable-use-content', this)">Acceptable Use</a>
         </div>
 
         <!-- Content (80% width) -->
-        <div class="content">
+        <div class="content" data-testid="infoHub_content">
             <!-- Home Content -->
             <div id="home-content" class="content-div">
                 <h1>Welcome to the Info Hub</h1>
@@ -156,4 +156,3 @@
     </div>
 </body>
 </html>
-}

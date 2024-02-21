@@ -8,7 +8,7 @@
 <head>
     <style>
         body {
-            background-image: url('assets/splashbackdrop.png');
+            
             background-size: 100% 100%;
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -96,8 +96,8 @@
                 <div class="col-5" style="display: flex; justify-content: flex-end;">
                     <div class="dropdown" style="margin-left: auto;">
                         <div style="display: flex">
-                            <a asp-action="Create" class="btn btn-success">Create New</a>
-                            <button id="dropdownButton" class="dropbtn" style="border-radius: 0.25rem; padding: 7.5px">
+                            <a data-testid="createStudent" asp-action="Create" class="btn btn-success">Create New</a>
+                            <button data-testid="searchStudent" id="dropdownButton" class="dropbtn" style="border-radius: 0.25rem; padding: 7.5px">
                                 Search <span id="arrowIcon"></span>
                             </button>
                         </div>
@@ -105,43 +105,43 @@
                             @if (ViewData.ContainsKey("userName"))
                             {
                                 <div style="margin-bottom: 10px;">
-                                    Username: <input type="text" name="userName" class="form-control" placeholder="Username..." value="@ViewData["userName"]" />
+                                    Username: <input data-testid="searchUsername" type="text" name="userName" class="form-control" placeholder="Username..." value="@ViewData["userName"]" />
                                 </div>
                             }
                             else
                             {
                                 <div style="margin-bottom: 10px;">
-                                    Username: <input type="text" name="userName" class="form-control" placeholder="Username..." />
+                                    Username: <input data-testid="searchUsername" type="text" name="userName" class="form-control" placeholder="Username..." />
                                 </div>
                             }
                             @if (ViewData.ContainsKey("firstName"))
                             {
                                 <div style="margin-bottom: 10px;">
-                                    First Name: <input type="text" name="firstName" class="form-control" placeholder="First Name..." value="@ViewData["firstName"]" />
+                                    First Name: <input data-testid="searchFirstName" type="text" name="firstName" class="form-control" placeholder="First Name..." value="@ViewData["firstName"]" />
                                 </div>
 
                             }
                             else
                             {
                                 <div style="margin-bottom: 10px;">
-                                    First Name: <input type="text" name="firstName" class="form-control" placeholder="First Name..." />
+                                    First Name: <input data-testid="searchFirstName" type="text" name="firstName" class="form-control" placeholder="First Name..." />
                                 </div>
                             }
                             @if (ViewData.ContainsKey("lastName"))
                             {
                                 <div style="margin-bottom: 10px;">
-                                    Last Name: <input type="text" name="lastName" class="form-control" placeholder="Last Name..." value="@ViewData["lastName"]" />
+                                    Last Name: <input data-testid="searchLastName" type="text" name="lastName" class="form-control" placeholder="Last Name..." value="@ViewData["lastName"]" />
                                 </div>
                             }
                             else
                             {
                                 <div style="margin-bottom: 10px;">
-                                    Last Name: <input type="text" name="lastName" class="form-control" placeholder="Last Name..." />
+                                    Last Name: <input data-testid="searchLastName" type="text" name="lastName" class="form-control" placeholder="Last Name..." />
                                 </div>
                             }
 
-                            <button type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">Search</button>
-                            <button type="submit" class="btn btn-secondary btn-block" onclick="clearSearch()" style="margin-top: 10px;">Reset</button>
+                            <button data-testid="searchStudentList" type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">Search</button>
+                            <button data-testid="resetSearch" type="submit" class="btn btn-secondary btn-block" onclick="clearSearch()" style="margin-top: 10px;">Reset</button>
 
                         </div>
                     </div>
@@ -164,24 +164,27 @@
                 </tr>
             </thead>
             <tbody>
+                @{
+                    int rowIndex = 1;
+                }
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td>
+                    <tr data-testid="studentListRow-@rowIndex">
+                        <td data-testid="listUsername">
                             @Html.DisplayFor(modelItem => item.Username)
                         </td>
-                        <td>
+                        <td data-testid="listFirstName">
                             @Html.DisplayFor(modelItem => item.FirstName)
                         </td>
-                        <td>
+                        <td data-testid="listLastName">
                             @Html.DisplayFor(modelItem => item.LastName)
                         </td>
                         <td>
-                            <a asp-action="Edit" asp-route-id="@item.StudentId"
+                            <a data-testid="edit-@item.StudentId" asp-action="Edit" asp-route-id="@item.StudentId"
                                class="btn btn-primary">Edit</a>
-                            <a asp-action="Details" asp-route-id="@item.StudentId"
+                            <a data-testid="details-@item.StudentId" asp-action="Details" asp-route-id="@item.StudentId"
                                class="btn btn-secondary">Details</a>
-                            <a asp-action="Delete" asp-route-id="@item.StudentId"
+                            <a data-testid="delete-@item.StudentId" asp-action="Delete" asp-route-id="@item.StudentId"
                                class="btn btn-danger">Delete</a>
                         </td>
                     </tr>

@@ -12,24 +12,24 @@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Username)
         </dt>
-        <dd class = "col-sm-10">
+        <dd data-testid="userName" class = "col-sm-10">
             @Html.DisplayFor(model => model.Username)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.FirstName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd data-testid="firstName" class = "col-sm-10">
             @Html.DisplayFor(model => model.FirstName)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.LastName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd data-testid="lastName" class = "col-sm-10">
             @Html.DisplayFor(model => model.LastName)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.StudentId" class="btn btn-primary">Edit</a>
-    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    <a data-testid="editStudent" asp-action="Edit" asp-route-id="@Model?.StudentId" class="btn btn-primary">Edit</a>
+    <a data-testid="backList" asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>

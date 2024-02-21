@@ -7,9 +7,116 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GearNet.Data;
 using GearNet.Entities;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 
 namespace GearNet.Controllers
 {
+
+    [Route("api/CasesApi")]
+    [ApiController]
+    public class CasesApiController : ControllerBase
+    {
+        private readonly GearNetContext _context;
+
+        public CasesApiController(GearNetContext context)
+        {
+            _context = context;
+        }
+
+        // POST: api/CasesApi/Create
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create([FromBody] Case case_)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var existingStudent = _context.Students.FirstOrDefault(s => s.Username == case_.Username);
+
+                    if (existingStudent != null)
+                    {
+                        case_.Student = existingStudent;
+                        _context.Cases.Add(case_);
+                        await _context.SaveChangesAsync();
+
+                        // Log case_ to console
+                        Console.WriteLine("Created Case:");
+                        Console.WriteLine(case_.Student);
+
+                        return Ok(case_);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("Username", "Student with the provided username does not exist.");
+                        return BadRequest(ModelState);
+                    }
+                }
+                else
+                {
+                    return BadRequest(ModelState);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+
+
+        // GET: api/CasesApi/GetAll
+        [HttpGet("GetAll")]
+        public async Task<ActionResult<IEnumerable<Case>>> GetAll()
+        {
+            var cases = await _context.Cases.ToListAsync();
+
+            return Ok(cases);
+        }
+
+        // GET: api/CasesApi/Get/5
+        [HttpGet("Get/{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            var cases = await _context.Cases.FindAsync(id);
+            if (cases == null)
+            {
+                return NotFound();
+            }
+            return Ok(cases);
+        }
+        // DELETE: api/CasesApi/Delete/5
+        [HttpDelete("Delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (_context.Cases == null)
+            {
+                return Problem("Entity set 'GearNetContext.Cases' is null.");
+            }
+
+            var case_ = await _context.Cases.Include(c => c.Devices).FirstOrDefaultAsync(c => c.CaseId == id);
+
+            if (case_ == null)
+            {
+                return NotFound();
+            }
+
+            foreach (var bookedDevice in case_.Devices)
+            {
+                bookedDevice.Case = null;
+                bookedDevice.IsCheckedOut = false;
+                bookedDevice.StudentId = null;
+            }
+
+            _context.Cases.Remove(case_);
+
+            await _context.SaveChangesAsync();
+            return Ok(case_);
+        }
+
+
+
+    }
+
     public class CasesController : Controller
     {
         private readonly GearNetContext _context;
@@ -20,7 +127,7 @@ namespace GearNet.Controllers
         }
 
         // GET: Cases
-        public async Task<IActionResult> Index(string caseName, DateTime? startDate, DateTime? endDate, int? duration, string? studentUser)
+        public async Task<IActionResult> Index(string caseName, DateTime? startDate, int? duration, string? studentUser)
         {
             var cases = _context.Cases.AsQueryable();
 
@@ -34,12 +141,7 @@ namespace GearNet.Controllers
                 cases = cases.Where(c => c.DateTime >= startDate.Value.Date);
             }
 
-            if (endDate.HasValue)
-            {
-                // Include records on the end date by adding a day to the endDate
-                var adjustedEndDate = endDate.Value.Date.AddDays(1);
-                cases = cases.Where(c => c.DateTime < adjustedEndDate);
-            }
+
 
             if (duration.HasValue)
             {
@@ -53,7 +155,6 @@ namespace GearNet.Controllers
 
             ViewData["caseName"] = caseName;
             ViewData["startDate"] = startDate.HasValue ? startDate.Value.ToString("yyyy-MM-dd") : null;
-            ViewData["endDate"] = endDate.HasValue ? endDate.Value.ToString("yyyy-MM-dd") : null;
             ViewData["duration"] = duration;
             ViewData["studentUser"] = studentUser;
 
@@ -85,7 +186,7 @@ namespace GearNet.Controllers
         {
             return View();
         }
-        
+
         // POST: Cases/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -95,10 +196,10 @@ namespace GearNet.Controllers
         {
             if (ModelState.IsValid)
             {
-                
+
                 var student = _context.Students.FirstOrDefault(s => s.Username == case_.Username);
 
-                if(student != null)
+                if (student != null)
                 {
                     case_.Student = student;
                     _context.Add(case_);
@@ -109,7 +210,7 @@ namespace GearNet.Controllers
                 {
                     ModelState.AddModelError("Username", "Student with the provided username does not exist.");
                 }
-                
+
 
             }
             return View(case_);
@@ -139,7 +240,7 @@ namespace GearNet.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CaseId,CaseName,DateTime,Duration,StudentId")] Case case_)
+        public async Task<IActionResult> Edit(int id, [Bind("CaseId,CaseName,DateTime,Duration,StudentId, Username")] Case case_)
         {
             if (id != case_.CaseId)
             {
@@ -148,26 +249,24 @@ namespace GearNet.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                var student = _context.Students.FirstOrDefault(s => s.Username == case_.Username);
+
+                if (student != null)
                 {
+                    case_.Student = student;
                     _context.Update(case_);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!CaseExists(case_.CaseId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    ModelState.AddModelError("Username", "Student with the provided username does not exist.");
+                    return View(case_);
                 }
-                return RedirectToAction("Details", new { id = case_.CaseId });
             }
             return View(case_);
         }
+
 
         // GET: Cases/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -219,7 +318,7 @@ namespace GearNet.Controllers
 
 
         // GET: Cases
-        public async Task<IActionResult> CaseSelection(string? caseName, DateTime? startDate, DateTime? endDate, int? duration, string? studentUser)
+        public async Task<IActionResult> CaseSelection(string? caseName, DateTime? startDate, int? duration, string? studentUser)
         {
             var cases = _context.Cases.AsQueryable();
 
@@ -233,12 +332,7 @@ namespace GearNet.Controllers
                 cases = cases.Where(c => c.DateTime >= startDate.Value.Date);
             }
 
-            if (endDate.HasValue)
-            {
-                // Include records on the end date by adding a day to the endDate
-                var adjustedEndDate = endDate.Value.Date.AddDays(1);
-                cases = cases.Where(c => c.DateTime < adjustedEndDate);
-            }
+
 
             if (duration.HasValue)
             {
@@ -252,7 +346,6 @@ namespace GearNet.Controllers
 
             ViewData["caseName"] = caseName;
             ViewData["startDate"] = startDate.HasValue ? startDate.Value.ToString("yyyy-MM-dd") : null;
-            ViewData["endDate"] = endDate.HasValue ? endDate.Value.ToString("yyyy-MM-dd") : null;
             ViewData["duration"] = duration;
             ViewData["studentUser"] = studentUser;
 
@@ -270,12 +363,12 @@ namespace GearNet.Controllers
         public IActionResult GetBookedDevicesForCase(int caseId)
         {
             var caseWithDevices = _context.Cases
-                .Include(c => c.Devices) 
+                .Include(c => c.Devices)
                 .FirstOrDefault(c => c.CaseId == caseId);
 
             if (caseWithDevices == null)
             {
-                return NotFound(); 
+                return NotFound();
             }
 
             var bookedDevices = caseWithDevices.Devices.ToList();
@@ -289,13 +382,13 @@ namespace GearNet.Controllers
             var caseToUpdate = _context.Cases.Include(c => c.Devices).FirstOrDefault(c => c.CaseId == caseId);
             if (caseToUpdate == null)
             {
-                return NotFound(); 
+                return NotFound();
             }
 
             var deviceToRemove = caseToUpdate.Devices.FirstOrDefault(d => d.DeviceId == deviceId);
             if (deviceToRemove == null)
             {
-                return NotFound(); 
+                return NotFound();
             }
 
             deviceToRemove.IsCheckedOut = false;

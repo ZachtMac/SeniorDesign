@@ -15,7 +15,7 @@ namespace GearNet.Entities
         [Required(ErrorMessage = "Case Name is Required")]
         [DisplayName("Case Name")]
         public string? CaseName { get; set; }
-        [DisplayName("Date")]
+        [DisplayName("Start Date")]
         public DateTime? DateTime { get; set; }
         [Required(ErrorMessage = "Duration is Required")]
         public double? Duration { get; set; }
@@ -32,14 +32,14 @@ namespace GearNet.Entities
 
     public class StudentUsernameNotInExistingCaseAttribute : ValidationAttribute
     {
-
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             var context = (GearNetContext)validationContext.GetService(typeof(GearNetContext));
-            
 
             var caseModel = (Case)validationContext.ObjectInstance;
-            var existingCase = context.Cases.FirstOrDefault(c => c.Student.Username == caseModel.Username);
+
+            // Exclude the current case being edited from the query
+            var existingCase = context.Cases.FirstOrDefault(c => c.CaseId != caseModel.CaseId && c.Student.Username == caseModel.Username);
 
             if (existingCase != null)
             {
@@ -49,4 +49,5 @@ namespace GearNet.Entities
             return ValidationResult.Success;
         }
     }
+
 }

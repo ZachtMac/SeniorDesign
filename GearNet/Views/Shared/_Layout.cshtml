@@ -7,20 +7,83 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/GearNet.styles.css" asp-append-version="true" />
+    <style>
+        .navbar-nav.evenly-spaced {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding-left: 0;
+        }
+
+            .navbar-nav.evenly-spaced .nav-item {
+                display: flex;
+                align-items: center;
+                height: 100%;
+                width: 100%;
+            }
+
+            .navbar-nav.evenly-spaced .nav-link {
+                padding: 10px 15px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                height: 100%;
+                text-align: center;
+                background-color: white;
+                color: #000; /* Changed text color */
+                border: none;
+                transition: background-color 0.3s ease;
+            }
+
+                .navbar-nav.evenly-spaced .nav-link:hover {
+                    background-color: #dbdade;
+                }
+
+                .navbar-nav.evenly-spaced .nav-link:focus,
+                .navbar-nav.evenly-spaced .nav-link:active {
+                    background-color: #aaaaac;
+                    outline: none;
+                }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+        }
+
+            .navbar-brand img {
+                height: 50px;
+                width: 50px;
+                margin-right: 10px;
+            }
+
+        /* New styles for the buffer */
+        .logo-buffer {
+            width: 133px; /* Adjust this width as necessary */
+            flex-shrink: 0; /* Prevents the element from shrinking */
+            margin-left: 16px; /* Adjusted margin */
+            margin-right: 16px; /* Adjusted margin */
+        }
+
+    </style>
+
 </head>
 <body>
-    <header >
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <img style="height: 50px; width: 50px" src="~/assets/logo.png" />GearNet
+    <header>
+        <nav style="padding: 0rem; padding-left: 1rem" class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div style="height: 100%; padding: 0rem; display: flex; align-items: center;" class="container-fluid">
+                <a class="navbar-brand" id="logo-link">
+                    <img class="navbar-brand"src="~/assets/logo.png" />GearNet
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+
+                <!-- Move the collapse button here -->
+                <button class="navbar-toggler ml-auto" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <div style="padding: 0rem; flex-grow: 1; align-self:stretch; align-items: center;" class="navbar-collapse collapse d-sm-inline-flex">
+                    <ul class="navbar-nav flex-grow-1 evenly-spaced" style="height: 100%;">
                         <li class="nav-item">
                             <a data-testid="Home" class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
@@ -42,6 +105,7 @@
                     </ul>
                 </div>
             </div>
+            <div class="logo-buffer navbar-collapse" id="logo-buffer"></div>
         </nav>
     </header>
     <div class="container">

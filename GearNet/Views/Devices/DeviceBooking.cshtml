@@ -71,14 +71,6 @@
                             Column: <input type="number" name="rackCol" class="form-control" placeholder="Rack Column..." />
                         </div>
                     }
-                    <div style="margin-bottom: 10px;" class="dropdown-select">
-                        Checked Out:
-                        <select id="isCheckedOutSelect" name="isCheckedOut" class="form-control">
-                            <option style="color: grey" value="unselected" selected='@((string)ViewData["isCheckedOut"] == "unselected" ? "selected" : null)'>(Select All)</option>
-                            <option value="true" selected='@((string)ViewData["isCheckedOut"] == "true" ? "selected" : null)'>True</option>
-                            <option value="false" selected='@((string)ViewData["isCheckedOut"] == "false" ? "selected" : null)'>False</option>
-                        </select>
-                    </div>
 
 
 
@@ -116,9 +108,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.RackCol)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsCheckedOut)
-            </th>
             <th></th>
                 
         </tr>
@@ -150,9 +139,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => device.RackCol)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => device.IsCheckedOut)
             </td>
             <td>
                 
@@ -407,44 +393,25 @@
         toggleDropdown();
     });
 
-    document.addEventListener("DOMContentLoaded", function () {
-        const isCheckedOutSelect = document.getElementById("isCheckedOutSelect");
-        isCheckedOutSelect.addEventListener("change", function () {
-            if (isCheckedOutSelect.value === "unselected") {
-                isCheckedOutSelect.classList.add("grey-text");
-            } else {
-                isCheckedOutSelect.classList.remove("grey-text");
-            }
-        });
-
-    });
 
 
     function toggleDropdown() {
-        const isCheckedOutSelect = document.getElementById("isCheckedOutSelect");
         var dropdown = document.getElementById("myDropdown");
         var arrowIcon = document.getElementById("arrowIcon");
         var selectContainer = document.querySelector(".select-container");
 
-        if (isCheckedOutSelect.value === "unselected") {
-            isCheckedOutSelect.classList.add("grey-text");
-        }
 
         if (dropdown.style.display === "block") {
             dropdown.style.display = "none";
             arrowIcon.style.transform = "rotate(0deg)";
-            selectContainer.classList.remove("active");
         } else {
             dropdown.style.display = "block";
             arrowIcon.style.transform = "rotate(180deg)";
-            selectContainer.classList.add("active");
         }
     }
 
     function clearSearch() {
-        const isCheckedOutSelect = document.getElementById("isCheckedOutSelect");
 
-        isCheckedOutSelect.value = "unselected"
 
 
         document.querySelector('input[name="deviceName"]').value = "";

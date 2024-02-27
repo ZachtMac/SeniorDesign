@@ -76,7 +76,7 @@
                 {
                     @foreach (var device in Model.Devices)
                     {
-                        <tr class="deviceRow">
+                        <tr class="deviceRow" data-testid="@device.DeviceId">
                             <td>@device.DeviceId</td>
                             <td>@device.DeviceName</td>
                             <td>@device.DeviceType</td>
@@ -89,7 +89,7 @@
                                 <form asp-controller="Cases" asp-action="RemoveFromBookedDevices" method="post">
                                     <input type="hidden" name="deviceId" value="@device.DeviceId" />
                                     <input type="hidden" name="caseId" value="@Model.CaseId" />
-                                    <button type="submit" class="btn btn-danger">Remove</button>
+                                    <button data-testid="removeDevice" type="submit" class="btn btn-danger">Remove</button>
                                 </form>
                             </td>
                         </tr>
@@ -107,42 +107,95 @@
 
 @section scripts {
     <script>
-        // Initialize pagination
         $(document).ready(function () {
-            var rows = $('.deviceRow');
             var pageSize = 5;
-            var pageCount = Math.ceil(rows.length / pageSize);
-
+            var rows = $('.deviceRow');
             var paginationContainer = $('#pagination');
 
-            // Pagination links
-            for (var i = 1; i <= pageCount; i++) {
-                var li = $('<li></li>').addClass('page-item').attr('data-page', i);
-                var link = $('<a></a>').addClass('page-link').attr('href', '#').text(i);
+            // Function to display devices for a given page
+            function displayDevices(pageNumber) {
+                var startIndex = (pageNumber - 1) * pageSize;
+                var endIndex = startIndex + pageSize;
 
-                li.append(link);
-                paginationContainer.append(li);
+                // Hide all devices
+                rows.hide();
+
+                // Show devices for the current page
+                rows.slice(startIndex, endIndex).show();
             }
 
-            // Add active class to the first page link
-            paginationContainer.find('.page-item:first-child').addClass('active');
+            // Pagination links
+            function generatePagination() {
+                var pageCount = Math.ceil(rows.length / pageSize);
+                paginationContainer.empty(); // Clear existing pagination links
+
+                for (var i = 1; i <= pageCount; i++) {
+                    var li = $('<li></li>').addClass('page-item');
+                    var link = $('<a></a>').addClass('page-link').attr('href', '#').text(i);
+
+                    li.append(link);
+                    paginationContainer.append(li);
+                }
+
+                // Add active class to the first page link
+                paginationContainer.find('.page-item:first-child').addClass('active');
+            }
+
+            // Display devices for the first page initially
+            displayDevices(1);
+
+            // Generate pagination initially
+            generatePagination();
 
             // Function to handle pagination
             paginationContainer.on('click', '.page-item', function () {
-                var pageNumber = parseInt($(this).attr('data-page'));
-                var start = pageSize * (pageNumber - 1);
-                var end = start + pageSize;
-
-                rows.hide().slice(start, end).show();
+                var pageNumber = parseInt($(this).text());
 
                 // Remove active class from all pagination links
                 paginationContainer.find('.page-item').removeClass('active');
+
                 // Add active class to the selected pagination link
                 $(this).addClass('active');
+
+                // Display devices for the selected page
+                displayDevices(pageNumber);
             });
 
-            // Show only the first page initially
-            paginationContainer.find('.page-item:first-child').click();
+            // Event handler to remove device rows
+            $(document).on('click', '[data-testid="removeDevice"]', function (e) {
+                e.preventDefault();
+
+                var row = $(this).closest('tr');
+                var pageIndex = parseInt($('.pagination').find('.active').text());
+
+                // Submit the form via AJAX
+                var form = row.find('form');
+                $.post(form.attr('action'), form.serialize(), function () {
+                    // Find the parent <tr> element and remove it with a transition
+                    row.fadeOut(400, function () {
+                        $(this).remove();
+
+                        // Update device rows
+                        rows = $('.deviceRow');
+                        var pageCount = Math.ceil(rows.length / pageSize);
+                        var activePage = parseInt($('.pagination').find('.active').text());
+
+                        // Regenerate pagination if necessary
+                        if (activePage > pageCount) {
+                            generatePagination();
+                            displayDevices(pageCount); // Display last page if current page is beyond new page count
+                        } else {
+                            displayDevices(activePage); // Maintain the same page after removal
+                        }
+
+                        // Check if there are no rows left
+                        if (rows.length === 0) {
+                            $('#deviceTableBody').append('<tr><td colspan="9">No Devices Booked</td></tr>');
+                        }
+                    });
+                });
+            });
         });
     </script>
 }
+

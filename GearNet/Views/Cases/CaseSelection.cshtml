@@ -84,48 +84,56 @@
                 </div>
             </div>
         </form>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.CaseName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.DateTime)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Duration)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Username)
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
+
+        <div style="height: 620px; overflow-y: auto; margin-bottom: 0rem">
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CaseName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.DateTime)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Duration)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Username)
-                        </td>
-                        <td>
-                            <a asp-controller="Devices" asp-action="DeviceBooking" asp-route-id="@item.CaseId"
-                               class="btn btn-primary">Select</a>
-                        </td>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CaseName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DateTime)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Duration)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Username)
+                        </th>
+                        <th></th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CaseName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DateTime)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Duration)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Username)
+                            </td>
+                            <td>
+                                <a asp-controller="Devices" asp-action="DeviceBooking" asp-route-id="@item.CaseId"
+                                   class="btn btn-primary">Select</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <nav aria-label="Page navigation example">
+            <ul id="pagination" class="pagination">
+                <!-- Pagination links will be dynamically generated here -->
+            </ul>
+        </nav>
     </div>
 
     <script>
@@ -176,7 +184,6 @@
     </script>
     <style>
         body {
-            
             background-size: 100% 100%;
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -320,3 +327,46 @@
     </style>
 </body>
 </html>
+@section scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        // Initialize pagination
+        $(document).ready(function () {
+            var rows = $('tbody').find('tr');
+            var pageSize = 10;
+            var pageCount = Math.ceil(rows.length / pageSize);
+
+            var paginationContainer = $('#pagination');
+
+            // Pagination links
+            for (var i = 1; i <= pageCount; i++) {
+                var li = $('<li></li>').addClass('page-item').attr('data-page', i);
+                var link = $('<a></a>').addClass('page-link').text(i);
+
+                li.append(link);
+                paginationContainer.append(li);
+            }
+
+            // Add active class to the first page link
+            paginationContainer.find('.page-item:first-child').addClass('active');
+
+            // Function to handle pagination
+            paginationContainer.on('click', '.page-item', function () {
+                var pageNumber = parseInt($(this).attr('data-page'));
+                var start = pageSize * (pageNumber - 1);
+                var end = start + pageSize;
+
+                rows.hide().slice(start, end).show();
+
+                // Remove active class from all pagination links
+                paginationContainer.find('.page-item').removeClass('active');
+                // Add active class to the selected pagination link
+                $(this).addClass('active');
+            });
+
+            // Show only the first page initially
+            paginationContainer.find('.page-item:first-child').click();
+        });
+    </script>
+}

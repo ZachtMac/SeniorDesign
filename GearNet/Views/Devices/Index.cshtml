@@ -8,7 +8,6 @@
 <head>
     <style>
         body {
-            
             background-size: 100% 100%;
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -48,8 +47,10 @@
             min-width: 160px;
             overflow: auto;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
+            z-index: 2;
+            right: 0; /* Align with the right side of the button */
         }
+
 
             .dropdown-content a {
                 color: black;
@@ -109,6 +110,13 @@
 
         table {
             background-color: rgba(255, 255, 255, 0); /* Adjust the alpha (0.5) for the desired opacity */
+        }
+
+        .table thead th {
+            position: sticky;
+            top: 0;
+            background-color: #fff; /* Optional: Set background color for sticky headers */
+            z-index: 1; /* Ensure it's above other content */
         }
 
     </style>
@@ -200,73 +208,80 @@
                 </div>
             </div>
         </form>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.DeviceName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.DeviceType)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.RackRow)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.RackCol)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.IsCheckedOut)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Case.CaseId)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Student.StudentId)
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @{
-                    int rowIndex = 1;
-                }
-                @foreach (var item in Model)
-                {
-                    <tr data-testid="deviceListRow-@rowIndex">
-                        <td data-testid="listDevicename">
-                            @Html.DisplayFor(modelItem => item.DeviceName)
-                        </td>
-                        <td data-testid="listDeviceType">
-                            @Html.DisplayFor(modelItem => item.DeviceType)
-                        </td>
-                        <td data-testid="listRackRow">
-                            @Html.DisplayFor(modelItem => item.RackRow)
-                        </td>
-                        <td data-testid="listRackCol">
-                            @Html.DisplayFor(modelItem => item.RackCol)
-                        </td>
-                        <td data-testid="listCheckedOut">
-                            @item.IsCheckedOut.ToString()
-                        </td>
-                        <td data-testid="listCaseId">
-                            @Html.DisplayFor(modelItem => item.CaseId)
-                        </td>
-                        <td data-testid="listStudentId">
-                            @Html.DisplayFor(modelItem => item.StudentId)
-                        </td>
-                        <td>
-                            <a data-testid="edit-@item.DeviceId" asp-action="Edit" asp-route-id="@item.DeviceId"
-                               class="btn btn-primary">Edit</a>
-                            <a data-testid="details-@item.DeviceId" asp-action="Details" asp-route-id="@item.DeviceId"
-                               class="btn btn-secondary">Details</a>
-                            <a data-testid="delete-@item.DeviceId" asp-action="Delete" asp-route-id="@item.DeviceId"
-                               class="btn btn-danger">Delete</a>
-                        </td>
+        <div style="height: 620px; overflow-y: auto; margin-bottom: 0rem">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DeviceName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DeviceType)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.RackRow)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.RackCol)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IsCheckedOut)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Case.CaseId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Student.StudentId)
+                        </th>
+                        <th></th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @{
+                        int rowIndex = 1;
+                    }
+                    @foreach (var item in Model)
+                    {
+                        <tr data-testid="deviceListRow-@rowIndex">
+                            <td data-testid="listDevicename">
+                                @Html.DisplayFor(modelItem => item.DeviceName)
+                            </td>
+                            <td data-testid="listDeviceType">
+                                @Html.DisplayFor(modelItem => item.DeviceType)
+                            </td>
+                            <td data-testid="listRackRow">
+                                @Html.DisplayFor(modelItem => item.RackRow)
+                            </td>
+                            <td data-testid="listRackCol">
+                                @Html.DisplayFor(modelItem => item.RackCol)
+                            </td>
+                            <td data-testid="listCheckedOut">
+                                @item.IsCheckedOut.ToString()
+                            </td>
+                            <td data-testid="listCaseId">
+                                @Html.DisplayFor(modelItem => item.CaseId)
+                            </td>
+                            <td data-testid="listStudentId">
+                                @Html.DisplayFor(modelItem => item.StudentId)
+                            </td>
+                            <td>
+                                <a data-testid="edit-@item.DeviceId" asp-action="Edit" asp-route-id="@item.DeviceId"
+                                   class="btn btn-primary">Edit</a>
+                                <a data-testid="details-@item.DeviceId" asp-action="Details" asp-route-id="@item.DeviceId"
+                                   class="btn btn-secondary">Details</a>
+                                <a data-testid="delete-@item.DeviceId" asp-action="Delete" asp-route-id="@item.DeviceId"
+                                   class="btn btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <nav aria-label="Page navigation example">
+            <ul id="pagination" class="pagination">
+                <!-- Pagination links will be dynamically generated here -->
+            </ul>
+        </nav>
     </div>
     <script>
         var searchValues = {};
@@ -325,3 +340,46 @@
     </script>
 </body>
 </html>
+@section scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        // Initialize pagination
+        $(document).ready(function () {
+            var rows = $('tbody').find('tr');
+            var pageSize = 10;
+            var pageCount = Math.ceil(rows.length / pageSize);
+
+            var paginationContainer = $('#pagination');
+
+            // Pagination links
+            for (var i = 1; i <= pageCount; i++) {
+                var li = $('<li></li>').addClass('page-item').attr('data-page', i);
+                var link = $('<a></a>').addClass('page-link').text(i);
+
+                li.append(link);
+                paginationContainer.append(li);
+            }
+
+            // Add active class to the first page link
+            paginationContainer.find('.page-item:first-child').addClass('active');
+
+            // Function to handle pagination
+            paginationContainer.on('click', '.page-item', function () {
+                var pageNumber = parseInt($(this).attr('data-page'));
+                var start = pageSize * (pageNumber - 1);
+                var end = start + pageSize;
+
+                rows.hide().slice(start, end).show();
+
+                // Remove active class from all pagination links
+                paginationContainer.find('.page-item').removeClass('active');
+                // Add active class to the selected pagination link
+                $(this).addClass('active');
+            });
+
+            // Show only the first page initially
+            paginationContainer.find('.page-item:first-child').click();
+        });
+    </script>
+}

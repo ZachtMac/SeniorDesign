@@ -179,10 +179,11 @@
                         rows = $('.deviceRow');
                         var pageCount = Math.ceil(rows.length / pageSize);
                         var activePage = parseInt($('.pagination').find('.active').text());
-
+                        if ((rows.length % 5) === 0) {
+                            generatePagination();
+                        }
                         // Regenerate pagination if necessary
                         if (activePage > pageCount) {
-                            generatePagination();
                             displayDevices(pageCount); // Display last page if current page is beyond new page count
                         } else {
                             displayDevices(activePage); // Maintain the same page after removal

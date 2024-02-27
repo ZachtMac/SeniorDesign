@@ -399,7 +399,7 @@ namespace GearNet.Controllers
 
             _context.SaveChanges();
 
-            return RedirectToAction("Details", "Cases", new { id = caseId });
+            return NoContent();
         }
     }
 }

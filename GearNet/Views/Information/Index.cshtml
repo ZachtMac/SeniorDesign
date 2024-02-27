@@ -3,7 +3,6 @@
 <head>
     <style>
         body {
-            
             background-size: 100% 100%;
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -12,12 +11,13 @@
         .wikiForm {
             background-color: rgba(255, 255, 255, 0.90);
             display: flex;
-            min-height: 50vh; /* Ensure the content takes at least the full viewport height */
+            min-height: 80vh; /* Ensure the content takes at least the full viewport height */
         }
 
         /* Style for the sidebar (20% width) */
         .sidebar {
             width: 20%;
+            min-height: 80vh; /* Set the height to 100% of the viewport height */
             background-color: #333;
             padding: 20px 0;
         }
@@ -50,6 +50,7 @@
             padding: 20px;
         }
     </style>
+
     <script>
         // JavaScript function to load content based on the sidebar link clicked
         function loadContent(contentId, link) {

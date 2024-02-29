@@ -12,7 +12,7 @@
 </head>
 <body>
     <div class="tableForm">
-        <form method="get" asp-action="Index">
+        <form method="get" asp-action="CaseSelection">
             <div class="row" style="width: 100%; flex-wrap: nowrap">
                 <div class="col-7" style="margin-right: 5px;">
                     <div class="form-group">
@@ -22,7 +22,7 @@
                 <div class="col-5" style="display: flex; justify-content: flex-end;">
                     <div class="dropdown" style="margin-left: auto;">
                         <div style="display: flex">
-                            <button id="dropdownButton" class="dropbtn" style="border-radius: 0.25rem; padding: 7.5px">
+                            <button data-testid="searchCase" id="dropdownButton" class="dropbtn" style="border-radius: 0.25rem; padding: 7.5px">
                                 Search <span id="arrowIcon"></span>
                             </button>
                         </div>
@@ -30,24 +30,24 @@
                             @if (ViewData.ContainsKey("caseName"))
                             {
                                 <div style="margin-bottom: 10px;">
-                                    Case Name: <input type="text" name="caseName" class="form-control" placeholder="Case Name..." value="@ViewData["caseName"]" />
+                                    Case Name: <input data-testid="searchCasename" type="text" name="caseName" class="form-control" placeholder="Case Name..." value="@ViewData["caseName"]" />
                                 </div>
                             }
                             else
                             {
                                 <div style="margin-bottom: 10px;">
-                                    Case Name: <input type="text" name="caseName" class="form-control" placeholder="Case Name..." />
+                                    Case Name: <input data-testid="searchCasename" type="text" name="caseName" class="form-control" placeholder="Case Name..." />
                                 </div>
                             }
                             <div style="margin-bottom: 10px;">
                                 Start:
                                 @if (ViewData.ContainsKey("startDate"))
                                 {
-                                    <input type="date" name="startDate" class="form-control" placeholder="" value="@ViewData["startDate"]" />
+                                    <input data-testid="searchStartdate" type="date" name="startDate" class="form-control" placeholder="" value="@ViewData["startDate"]" />
                                 }
                                 else
                                 {
-                                    <input type="date" name="startDate" class="form-control" placeholder="" />
+                                    <input data-testid="searchStartdate" type="date" name="startDate" class="form-control" placeholder="" />
                                 }
                             </div>
 
@@ -55,29 +55,29 @@
                             @if (ViewData.ContainsKey("duration"))
                             {
                                 <div style="margin-bottom: 10px;">
-                                    Duration: <input type="number" name="duration" class="form-control" placeholder="Duration..." value="@ViewData["duration"]" />
+                                    Duration: <input data-testid="searchDuration" type="number" name="duration" class="form-control" placeholder="Duration..." value="@ViewData["duration"]" />
                                 </div>
                             }
                             else
                             {
                                 <div style="margin-bottom: 10px;">
-                                    Duration: <input type="number" name="duration" class="form-control" placeholder="Duration..." />
+                                    Duration: <input data-testid="searchDuration" type="number" name="duration" class="form-control" placeholder="Duration..." />
                                 </div>
                             }
                             @if (ViewData.ContainsKey("studentUser"))
                             {
                                 <div style="margin-bottom: 10px;">
-                                    Student Username: <input type="text" name="studentUser" class="form-control" placeholder="Student Username..." value="@ViewData["studentUser"]" />
+                                    Student Username: <input data-testid="searchUsername" type="text" name="studentUser" class="form-control" placeholder="Student Username..." value="@ViewData["studentUser"]" />
                                 </div>
                             }
                             else
                             {
                                 <div style="margin-bottom: 10px;">
-                                    Student Username: <input type="text" name="studentUser" class="form-control" placeholder="Student Username..." />
+                                    Student Username: <input data-testid="searchUsername" type="text" name="studentUser" class="form-control" placeholder="Student Username..." />
                                 </div>
                             }
-                            <button type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">Search</button>
-                            <button type="submit" class="btn btn-secondary btn-block" onclick="clearSearch()" style="margin-top: 10px;">Reset</button>
+                            <button data-testid="searchCaselist" type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">Search</button>
+                            <button data-testid="resetSearch" type="submit" class="btn btn-secondary btn-block" onclick="clearSearch()" style="margin-top: 10px;">Reset</button>
 
                         </div>
                     </div>
@@ -105,23 +105,26 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @{
+                        int rowIndex = 1;
+                    }
                     @foreach (var item in Model)
                     {
-                        <tr>
-                            <td>
+                        <tr data-testid="caseListRow-@rowIndex">
+                            <td data-testid="listCasename">
                                 @Html.DisplayFor(modelItem => item.CaseName)
                             </td>
-                            <td>
+                            <td data-testid="listStartdate">
                                 @Html.DisplayFor(modelItem => item.DateTime)
                             </td>
-                            <td>
+                            <td data-testid="listDuration">
                                 @Html.DisplayFor(modelItem => item.Duration)
                             </td>
-                            <td>
+                            <td data-testid="listUsername">
                                 @Html.DisplayFor(modelItem => item.Username)
                             </td>
                             <td>
-                                <a asp-controller="Devices" asp-action="DeviceBooking" asp-route-id="@item.CaseId"
+                                <a data-testid="book-@item.CaseId" asp-controller="Devices" asp-action="DeviceBooking" asp-route-id="@item.CaseId"
                                    class="btn btn-primary">Select</a>
                             </td>
                         </tr>
@@ -224,6 +227,7 @@
             overflow: auto;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
             z-index: 1;
+            right: 0; /* Align the right side of the dropdown with the button */
         }
 
             .dropdown-content a {

@@ -33,7 +33,7 @@ describe('Edit Devices', () => {
 
         // Check the current information to compare against
         cy.get('[data-testid="deviceListRow-1"]').then(() => {
-            cy.get('[data-testid="listDevicename"]').should('contain', testDevice1.deviceName)
+            cy.get('[data-testid="listDeviceName"]').should('contain', testDevice1.deviceName)
             cy.get('[data-testid="listDeviceType"]').should('contain', testDevice1.deviceType)
             cy.get('[data-testid="listRackRow"]').should('contain', testDevice1.rackRow)
             cy.get('[data-testid="listRackCol"]').should('contain', testDevice1.rackCol)
@@ -106,7 +106,7 @@ describe('Edit Devices', () => {
 
         // Check the current information to compare against
         cy.get('[data-testid="deviceListRow-1"]').then(() => {
-            cy.get('[data-testid="listDevicename"]').should('contain', testDevice1.deviceName)
+            cy.get('[data-testid="listDeviceName"]').should('contain', testDevice1.deviceName)
             cy.get('[data-testid="listDeviceType"]').should('contain', testDevice1.deviceType)
             cy.get('[data-testid="listRackRow"]').should('contain', testDevice1.rackRow)
             cy.get('[data-testid="listRackCol"]').should('contain', testDevice1.rackCol)

@@ -4,47 +4,48 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<div style="margin-top: 5rem">
+    <h1>Edit</h1>
 
-<h4>Case</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="CaseId" />
-            <div class="form-group">
-                <label asp-for="CaseName" class="control-label"></label>
-                <input data-testid="editCasename" asp-for="CaseName" class="form-control" />
-                <span asp-validation-for="CaseName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DateTime" class="control-label"></label>
-                <input data-testid="editStartDate" asp-for="DateTime" class="form-control" />
-                <span asp-validation-for="DateTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Duration" class="control-label"></label>
-                <input data-testid="editDuration" asp-for="Duration" class="form-control" />
-                <span asp-validation-for="Duration" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Username" class="control-label"></label>
-                <input data-testid="editUsername" type="text" id="Username" name="Username" class="form-control" asp-for="Username" />
-                <span asp-validation-for="Username" class="text-danger"></span>
-            </div>
-            <div class="form-group" style="flex-direction: row; margin-top: 15px;">
-                <a asp-action="Details"
-                   data-testid="cancelEdit"
-                   asp-route-id="@Model?.CaseId"
-                   class="btn btn-secondary mr-2"
-                   style="margin-right: 5px;">Cancel</a>
-                <input data-testid="editCase" type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+    <h4>Case</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="CaseId" />
+                <div class="form-group">
+                    <label asp-for="CaseName" class="control-label"></label>
+                    <input data-testid="editCasename" asp-for="CaseName" class="form-control" />
+                    <span asp-validation-for="CaseName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DateTime" class="control-label"></label>
+                    <input data-testid="editStartDate" asp-for="DateTime" class="form-control" />
+                    <span asp-validation-for="DateTime" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Duration" class="control-label"></label>
+                    <input data-testid="editDuration" asp-for="Duration" class="form-control" />
+                    <span asp-validation-for="Duration" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Username" class="control-label"></label>
+                    <input data-testid="editUsername" type="text" id="Username" name="Username" class="form-control" asp-for="Username" />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div class="form-group" style="flex-direction: row; margin-top: 15px;">
+                    <a asp-action="Details"
+                       data-testid="cancelEdit"
+                       asp-route-id="@Model?.CaseId"
+                       class="btn btn-secondary mr-2"
+                       style="margin-right: 5px;">Cancel</a>
+                    <input data-testid="editCase" type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-
 
 @section Scripts {
     @{

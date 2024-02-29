@@ -4,67 +4,68 @@
     ViewData["Title"] = "New Device";
 }
 
-<h1>Create New Device</h1>
+<div style="margin-top: 5rem">
+    <h1>Create New Device</h1>
 
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <div class="form-group">
-                <label asp-for="DeviceName" class="control-label"></label>
-                <input data-testid="deviceName" asp-for="DeviceName" class="form-control" />
-                <span asp-validation-for="DeviceName" class="text-danger"></span>
-            </div>
+                <div class="form-group">
+                    <label asp-for="DeviceName" class="control-label"></label>
+                    <input data-testid="deviceName" asp-for="DeviceName" class="form-control" />
+                    <span asp-validation-for="DeviceName" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="DeviceType" class="control-label"></label>
-                <input data-testid="deviceType" asp-for="DeviceType" class="form-control" />
-                <span asp-validation-for="DeviceType" class="text-danger"></span>
-            </div>
+                <div class="form-group">
+                    <label asp-for="DeviceType" class="control-label"></label>
+                    <input data-testid="deviceType" asp-for="DeviceType" class="form-control" />
+                    <span asp-validation-for="DeviceType" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="RackRow" class="control-label"></label>
-                <input data-testid="rackRow" asp-for="RackRow" class="form-control" type="number" />
-                <span asp-validation-for="RackRow" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RackCol" class="control-label"></label>
-                <input data-testid="rackCol" asp-for="RackCol" class="form-control" type="number" />
-                <span asp-validation-for="RackCol" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OperatingSystem" class="control-label"></label>
-                <input data-testid="OS" asp-for="OperatingSystem" class="form-control" />
-                <span asp-validation-for="OperatingSystem" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SoftwareVersion" class="control-label"></label>
-                <input data-testid="softwareVersion" asp-for="SoftwareVersion" class="form-control" />
-                <span asp-validation-for="SoftwareVersion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Vendor" class="control-label"></label>
-                <input data-testid="vendor" asp-for="Vendor" class="form-control" />
-                <span asp-validation-for="Vendor" class="text-danger"></span>
-            </div>
-            <div style="display: none" class="form-group">
-                <input asp-for="IsCheckedOut" type="hidden" value="false" />
-                <span asp-validation-for="IsCheckedOut" class="text-danger"></span>
-            </div>
+                <div class="form-group">
+                    <label asp-for="RackRow" class="control-label"></label>
+                    <input data-testid="rackRow" asp-for="RackRow" class="form-control" type="number" />
+                    <span asp-validation-for="RackRow" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RackCol" class="control-label"></label>
+                    <input data-testid="rackCol" asp-for="RackCol" class="form-control" type="number" />
+                    <span asp-validation-for="RackCol" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="OperatingSystem" class="control-label"></label>
+                    <input data-testid="OS" asp-for="OperatingSystem" class="form-control" />
+                    <span asp-validation-for="OperatingSystem" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SoftwareVersion" class="control-label"></label>
+                    <input data-testid="softwareVersion" asp-for="SoftwareVersion" class="form-control" />
+                    <span asp-validation-for="SoftwareVersion" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Vendor" class="control-label"></label>
+                    <input data-testid="vendor" asp-for="Vendor" class="form-control" />
+                    <span asp-validation-for="Vendor" class="text-danger"></span>
+                </div>
+                <div style="display: none" class="form-group">
+                    <input asp-for="IsCheckedOut" type="hidden" value="false" />
+                    <span asp-validation-for="IsCheckedOut" class="text-danger"></span>
+                </div>
 
 
-            <div class="form-group" style="flex-direction: row; margin-top: 15px;">
-                <a data-testid="cancelCreate" asp-action="Index" style="margin-right: 10px;" class="btn btn-secondary">Cancel</a>
-                <input data-testid="createDevice" type="submit" value="Create" class="btn btn-primary" />
-            </div>
-            <div class="form-group">
-            </div>
-        </form>
+                <div class="form-group" style="flex-direction: row; margin-top: 15px;">
+                    <a data-testid="cancelCreate" asp-action="Index" style="margin-right: 10px;" class="btn btn-secondary">Cancel</a>
+                    <input data-testid="createDevice" type="submit" value="Create" class="btn btn-primary" />
+                </div>
+                <div class="form-group">
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-
 
 
 <style>
@@ -87,12 +88,12 @@
         height: 34px;
     }
 
-    /* Hide default HTML checkbox */
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
+        /* Hide default HTML checkbox */
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
 
     /* The slider */
     .slider {
@@ -106,16 +107,16 @@
         transition: 0.4s;
     }
 
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 26px;
-        width: 26px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        transition: 0.4s;
-    }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+        }
 
     input:checked + .slider {
         background-color: #2196F3;
@@ -134,7 +135,7 @@
         border-radius: 34px;
     }
 
-    .slider.round:before {
-        border-radius: 50%;
-    }
+        .slider.round:before {
+            border-radius: 50%;
+        }
 </style>

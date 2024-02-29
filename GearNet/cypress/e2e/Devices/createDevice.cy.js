@@ -100,7 +100,7 @@ describe('Create Devices', () => {
             })
         })
         cy.get('[data-testid="deviceListRow-1"]').then(() => {
-            cy.get('[data-testid="listDevicename"]').should('contain', testDevice.deviceName)
+            cy.get('[data-testid="listDeviceName"]').should('contain', testDevice.deviceName)
             cy.get('[data-testid="listDeviceType"]').should('contain', testDevice.deviceType)
             cy.get('[data-testid="listRackRow"]').should('contain', testDevice.rackRow)
             cy.get('[data-testid="listRackCol"]').should('contain', testDevice.rackCol)

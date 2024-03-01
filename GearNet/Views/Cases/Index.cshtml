@@ -22,8 +22,8 @@
                 <div class="col-5" style="display: flex; justify-content: flex-end;">
                     <div class="dropdown" style="margin-left: auto;">
                         <div style="display: flex">
-                            <a asp-action="Create" class="green-hover btn btn-success">Create New</a>
-                            <button id="dropdownButton" class="dropbtn" style="border-radius: 0.25rem; padding: 7.5px">
+                            <a data-testid="createCase" asp-action="Create" class="green-hover btn btn-success">Create New</a>
+                            <button data-testid="searchCase" id="dropdownButton" class="dropbtn" style="border-radius: 0.25rem; padding: 7.5px">
                                 Search <span id="arrowIcon"></span>
                             </button>
                         </div>
@@ -31,33 +31,24 @@
                             @if (ViewData.ContainsKey("caseName"))
                             {
                                 <div style="margin-bottom: 10px;">
-                                    Case Name: <input type="text" name="caseName" class="form-control" placeholder="Case Name..." value="@ViewData["caseName"]" />
+                                    Case Name: <input data-testid="searchCasename" type="text" name="caseName" class="form-control" placeholder="Case Name..." value="@ViewData["caseName"]" />
                                 </div>
                             }
                             else
                             {
                                 <div style="margin-bottom: 10px;">
-                                    Case Name: <input type="text" name="caseName" class="form-control" placeholder="Case Name..." />
+                                    Case Name: <input data-testid="searchCasename" type="text" name="caseName" class="form-control" placeholder="Case Name..." />
                                 </div>
                             }
                             <div style="margin-bottom: 10px;">
-                                Start:
+                                Start Date:
                                 @if (ViewData.ContainsKey("startDate"))
                                 {
-                                    <input type="date" name="startDate" class="form-control" placeholder="" value="@ViewData["startDate"]" />
+                                    <input data-testid="searchStartdate" type="date" name="startDate" class="form-control" placeholder="" value="@ViewData["startDate"]" />
                                 }
                                 else
                                 {
-                                    <input type="date" name="startDate" class="form-control" placeholder="" />
-                                }
-                                End:
-                                @if (ViewData.ContainsKey("endDate"))
-                                {
-                                    <input type="date" name="endDate" class="form-control" placeholder="" value="@ViewData["endDate"]" />
-                                }
-                                else
-                                {
-                                    <input type="date" name="endDate" class="form-control" placeholder="" />
+                                    <input data-testid="searchStartdate" type="date" name="startDate" class="form-control" placeholder="" />
                                 }
                             </div>
 
@@ -65,35 +56,36 @@
                             @if (ViewData.ContainsKey("duration"))
                             {
                                 <div style="margin-bottom: 10px;">
-                                    Duration: <input type="number" name="duration" class="form-control" placeholder="Duration..." value="@ViewData["duration"]" />
+                                    Duration: <input data-testid="searchDuration" type="number" name="duration" class="form-control" placeholder="Duration..." value="@ViewData["duration"]" />
                                 </div>
                             }
                             else
                             {
                                 <div style="margin-bottom: 10px;">
-                                    Duration: <input type="number" name="duration" class="form-control" placeholder="Duration..." />
+                                    Duration: <input data-testid="searchDuration" type="number" name="duration" class="form-control" placeholder="Duration..." />
                                 </div>
                             }
                             @if (ViewData.ContainsKey("studentUser"))
                             {
                                 <div style="margin-bottom: 10px;">
-                                    Student Username: <input type="text" name="studentUser" class="form-control" placeholder="Student Username..." value="@ViewData["studentUser"]" />
+                                    Student Username: <input data-testid="searchUsername" type="text" name="studentUser" class="form-control" placeholder="Student Username..." value="@ViewData["studentUser"]" />
                                 </div>
                             }
                             else
                             {
                                 <div style="margin-bottom: 10px;">
-                                    Student Username: <input type="text" name="studentUser" class="form-control" placeholder="Student Username..." />
+                                    Student Username: <input data-testid="searchUsername" type="text" name="studentUser" class="form-control" placeholder="Student Username..." />
                                 </div>
                             }
-                            <button type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">Search</button>
-                            <button type="submit" class="btn btn-secondary btn-block" onclick="clearSearch()" style="margin-top: 10px;">Reset</button>
+                            <button data-testid="searchCaselist" type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">Search</button>
+                            <button data-testid="resetSearch" type="submit" class="btn btn-secondary btn-block" onclick="clearSearch()" style="margin-top: 10px;">Reset</button>
 
                         </div>
                     </div>
                 </div>
             </div>
         </form>
+        <div style="height: 620px; overflow-y: auto; margin-bottom: 0rem">
         <table class="table">
             <thead>
                 <tr>
@@ -109,37 +101,48 @@
                     <th>
                         @Html.DisplayNameFor(model => model.Username)
                     </th>
-                    <th></th>
+                    <th ></th>
                 </tr>
             </thead>
             <tbody>
+                @{
+                    int rowIndex = 1;
+                }
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td>
+                    <tr data-testid="caseListRow-@rowIndex">
+                        <td data-testid="listCasename">
                             @Html.DisplayFor(modelItem => item.CaseName)
                         </td>
-                        <td>
+                        <td data-testid="listStartdate">
                             @Html.DisplayFor(modelItem => item.DateTime)
                         </td>
-                        <td>
+                        <td data-testid="listDuration">
                             @Html.DisplayFor(modelItem => item.Duration)
                         </td>
-                        <td>
+                        <td data-testid="listUsername">
                             @Html.DisplayFor(modelItem => item.Username)
                         </td>
                         <td>
-                            <a asp-action="Edit" asp-route-id="@item.CaseId"
+                            <a data-testid="edit-@item.CaseId" asp-action="Edit" asp-route-id="@item.CaseId"
                                class="btn btn-primary">Edit</a>
-                            <a asp-action="Details" asp-route-id="@item.CaseId"
+                            <a data-testid="details-@item.CaseId" asp-action="Details" asp-route-id="@item.CaseId"
                                class="btn btn-secondary">Details</a>
-                            <a asp-action="Delete" asp-route-id="@item.CaseId"
+                            <a data-testid="delete-@item.CaseId" asp-action="Delete" asp-route-id="@item.CaseId"
                                class="btn btn-danger">Delete</a>
                         </td>
                     </tr>
+                    rowIndex++;
                 }
             </tbody>
+
         </table>
+        </div>
+        <nav aria-label="Page navigation example">
+            <ul id="pagination" class="pagination">
+                <!-- Pagination links will be dynamically generated here -->
+            </ul>
+        </nav>
     </div>
 
     <script>
@@ -184,14 +187,13 @@
         function clearSearch() {
             document.querySelector('input[name="caseName"]').value = "";
             document.querySelector('input[name="startDate"]').value = "";
-            document.querySelector('input[name="endDate"]').value = "";
             document.querySelector('input[name="duration"]').value = "";
             document.querySelector('input[name="studentUser"]').value = "";
         }
     </script>
     <style>
         body {
-            background-image: url('assets/splashbackdrop.png');
+            
             background-size: 100% 100%;
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -232,6 +234,7 @@
             overflow: auto;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
             z-index: 1;
+            right: 0; /* Align the right side of the dropdown with the button */
         }
 
             .dropdown-content a {
@@ -317,6 +320,7 @@
 
         table {
             background-color: rgba(255, 255, 255, 0); /* Adjust the alpha (0.5) for the desired opacity */
+
         }
 
         .green-hover:hover {
@@ -335,3 +339,47 @@
     </style>
 </body>
 </html>
+
+@section scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        // Initialize pagination
+        $(document).ready(function () {
+            var rows = $('tbody').find('tr');
+            var pageSize = 10;
+            var pageCount = Math.ceil(rows.length / pageSize);
+
+            var paginationContainer = $('#pagination');
+
+            // Pagination links
+            for (var i = 1; i <= pageCount; i++) {
+                var li = $('<li></li>').addClass('page-item').attr('data-page', i);
+                var link = $('<a></a>').addClass('page-link').text(i);
+
+                li.append(link);
+                paginationContainer.append(li);
+            }
+
+            // Add active class to the first page link
+            paginationContainer.find('.page-item:first-child').addClass('active');
+
+            // Function to handle pagination
+            paginationContainer.on('click', '.page-item', function () {
+                var pageNumber = parseInt($(this).attr('data-page'));
+                var start = pageSize * (pageNumber - 1);
+                var end = start + pageSize;
+
+                rows.hide().slice(start, end).show();
+
+                // Remove active class from all pagination links
+                paginationContainer.find('.page-item').removeClass('active');
+                // Add active class to the selected pagination link
+                $(this).addClass('active');
+            });
+
+            // Show only the first page initially
+            paginationContainer.find('.page-item:first-child').click();
+        });
+    </script>
+}

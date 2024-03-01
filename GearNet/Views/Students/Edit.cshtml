@@ -4,38 +4,42 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit Student</h1>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="StudentId" />
-            <div class="form-group">
-                <label asp-for="Username" class="control-label"></label>
-                <input asp-for="Username" class="form-control" />
-                <span asp-validation-for="Username" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
-            <div class="form-group" style="flex-direction: row; margin-top: 15px;">
-                <a asp-action="Details"
-                   asp-route-id="@Model?.StudentId"
-                   class="btn btn-secondary mr-2"
-                   style="margin-right: 5px;">Cancel</a>
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<div style="margin-top: 5rem">
+    <h1>Edit Student</h1>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="StudentId" />
+                <div class="form-group">
+                    <label asp-for="Username" class="control-label"></label>
+                    <input data-testid="userName" asp-for="Username" class="form-control" />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FirstName" class="control-label"></label>
+                    <input data-testid="firstName" asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName" class="control-label"></label>
+                    <input data-testid="lastName" asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <div class="form-group" style="flex-direction: row; margin-top: 15px;">
+                    <a data-testid="cancelEdit" asp-action="Details"
+                       asp-route-id="@Model?.StudentId"
+                       class="btn btn-secondary mr-2"
+                       style="margin-right: 5px;">Cancel</a>
+                    <input data-testid="editStudent" type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

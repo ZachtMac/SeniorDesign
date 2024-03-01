@@ -4,95 +4,83 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Device Details</h1>
+<div style="margin-top: 5rem">
+    <h1>Device Details</h1>
 
-<div>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DeviceName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DeviceName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DeviceType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DeviceType)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.OperatingSystem)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OperatingSystem)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.SoftwareVersion)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.SoftwareVersion)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Vendor)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Vendor)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.RackRow)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.RackRow)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.RackCol)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.RackCol)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.IsCheckedOut)
-        </dt>
-        <dd class="col-sm-10">
-            @Model.IsCheckedOut.ToString()
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Case.CaseName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Case.CaseName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Student.Username)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Student.Username)
-        </dd>
-        <div>
-            <a asp-action="Edit" asp-route-id="@Model?.DeviceId" class="btn btn-primary">Edit</a>
-            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    <div>
+        <hr />
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="flex-container">
+                    <div class="flex-item">
+                        <h6 style="font-weight: bold;">@Html.DisplayNameFor(model => model.DeviceName)</h6>
+                        <subtitle data-testid="deviceName">@Html.DisplayFor(model => model.DeviceName)</subtitle>
+                    </div>
+                    <div class="flex-item">
+                        <h6 style="font-weight: bold;">@Html.DisplayNameFor(model => model.DeviceType)</h6>
+                        <subtitle data-testid="deviceType">@Html.DisplayFor(model => model.DeviceType)</subtitle>
+                    </div>
+                    <div class="flex-item">
+                        <h6 style="font-weight: bold;">@Html.DisplayNameFor(model => model.OperatingSystem)</h6>
+                        <subtitle data-testid="OS">@Html.DisplayFor(model => model.OperatingSystem)</subtitle>
+                    </div>
+                    <div class="flex-item">
+                        <h6 style="font-weight: bold;">@Html.DisplayNameFor(model => model.SoftwareVersion)</h6>
+                        <subtitle data-testid="softwareVersion">@Html.DisplayFor(model => model.SoftwareVersion)</subtitle>
+                    </div>
+                    <div class="flex-item">
+                        <h6 style="font-weight: bold;">@Html.DisplayNameFor(model => model.Vendor)</h6>
+                        <subtitle data-testid="vendor">@Html.DisplayFor(model => model.Vendor)</subtitle>
+                    </div>
+                    <div class="flex-item">
+                        <h6 style="font-weight: bold;">@Html.DisplayNameFor(model => model.RackRow)</h6>
+                        <subtitle data-testid="rackRow">@Html.DisplayFor(model => model.RackRow)</subtitle>
+                    </div>
+                    <div class="flex-item">
+                        <h6 style="font-weight: bold;">@Html.DisplayNameFor(model => model.RackCol)</h6>
+                        <subtitle data-testid="rackCol">@Html.DisplayFor(model => model.RackCol)</subtitle>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="flex-container">
+                    <div class="flex-item">
+                        <h6 style="font-weight: bold;">@Html.DisplayNameFor(model => model.IsCheckedOut)</h6>
+                        <subtitle data-testid="checkedOut" class="col-sm-10">@Model.IsCheckedOut.ToString()</subtitle>
+                    </div>
+                    @if (Model.IsCheckedOut == true)
+                    {
+                        <div class="flex-item">
+                            <h6 style="font-weight: bold;">@Html.DisplayNameFor(model => model.Case.CaseName)</h6>
+                            <subtitle data-testid="caseName" class="col-sm-10">@Html.DisplayFor(model => model.Case.CaseName)</subtitle>
+                        </div>
+                        <div class="flex-item">
+                            <h6 style="font-weight: bold;">@Html.DisplayNameFor(model => model.Student.Username)</h6>
+                            <subtitle data-testid="username" class="col-sm-10">@Html.DisplayFor(model => model.Student.Username)</subtitle>
+                        </div>
+                    }
+                </div>
+            </div>
         </div>
-
-    </dl>
+        <div>
+            <a data-testid="editDevice" asp-action="Edit" asp-route-id="@Model?.DeviceId" class="btn btn-primary">Edit</a>
+            <a data-testid="backList" asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
 </div>
-
-
 <style>
-    .flex-column {
+    .flex-container {
         display: flex;
         flex-direction: column;
-        padding: 2.5px;
+        margin-bottom: 20px; /* Add spacing between flex items */
     }
 
-    .form-group {
-        display: flex;
-        flex-direction: column;
-        padding: 2.5px;
+    .flex-item {
+        margin-bottom: 10px; /* Add spacing between each label-value pair */
     }
 
-    .form-group dd {
-        padding: 3.5px 0;
+    /* Adjustments for subtitle tag */
+    subtitle {
+        font-weight: normal; /* Reset font weight */
     }
-
 </style>

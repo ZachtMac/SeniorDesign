@@ -24,7 +24,10 @@ namespace GearNet
                 options.UseSqlServer(Configuration.GetConnectionString("dev"));
             });
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+            });
 
             services.AddHttpContextAccessor();
 

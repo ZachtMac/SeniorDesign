@@ -4,104 +4,72 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit Device</h1>
+<div style="margin-top: 5rem">
+    <h1>Edit Device</h1>
 
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit" asp-route-id="@Model?.DeviceId">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="DeviceId" />
-            <div class="form-group">
-                <label asp-for="DeviceName" class="control-label"></label>
-                <input asp-for="DeviceName" class="form-control" />
-                <span asp-validation-for="DeviceName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DeviceType" class="control-label"></label>
-                <input asp-for="DeviceType" class="form-control" />
-                <span asp-validation-for="DeviceType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RackRow" class="control-label"></label>
-                <input asp-for="RackRow" class="form-control" />
-                <span asp-validation-for="RackRow" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RackCol" class="control-label"></label>
-                <input asp-for="RackCol" class="form-control" />
-                <span asp-validation-for="RackCol" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="OperatingSystem" class="control-label"></label>
-                <input asp-for="OperatingSystem" class="form-control" />
-                <span asp-validation-for="OperatingSystem" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SoftwareVersion" class="control-label"></label>
-                <input asp-for="SoftwareVersion" class="form-control" />
-                <span asp-validation-for="SoftwareVersion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Vendor" class="control-label"></label>
-                <input asp-for="Vendor" class="form-control" />
-                <span asp-validation-for="Vendor" class="text-danger"></span>
-            <div class="form-group">
-                <label asp-for="CaseId" class="control-label"></label>
-                <input asp-for="CaseId" class="form-control" />
-                <span asp-validation-for="CaseId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Checked Out</label>
-                <span asp-validation-for="IsCheckedOut" class="text-danger"></span>
-            </div>
-            <div class="form-group"
-                 style="flex-direction: row; align-items: center">
-                <label class="switch" style="margin-right: 10px;">
-                    <input type="checkbox" id="IsCheckedOutSwitch" @if (Model.IsCheckedOut == true)
-                    {
-                        <text>checked="checked"</text>
-                    }
-                    />
-                    <span class="slider round"></span>
-                </label>
-                <input asp-for="IsCheckedOut" type="hidden" />
-                <span id="toggleText">@Model.IsCheckedOut</span>
-            </div>
-            <div class="form-group" style="flex-direction: row; margin-top: 15px;">
-                <a asp-action="Details"
-                   asp-route-id="@Model?.DeviceId"
-                   class="btn btn-secondary mr-2"
-                   style="margin-right: 5px;">Cancel</a>
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit" asp-route-id="@Model?.DeviceId">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="DeviceId" />
+                <div class="form-group">
+                    <label asp-for="DeviceName" class="control-label"></label>
+                    <input data-testid="deviceName" asp-for="DeviceName" class="form-control" />
+                    <span asp-validation-for="DeviceName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DeviceType" class="control-label"></label>
+                    <input data-testid="deviceType" asp-for="DeviceType" class="form-control" />
+                    <span asp-validation-for="DeviceType" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RackRow" class="control-label"></label>
+                    <input data-testid="rackRow" asp-for="RackRow" class="form-control" />
+                    <span asp-validation-for="RackRow" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RackCol" class="control-label"></label>
+                    <input data-testid="rackCol" asp-for="RackCol" class="form-control" />
+                    <span asp-validation-for="RackCol" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="OperatingSystem" class="control-label"></label>
+                    <input data-testid="OS" asp-for="OperatingSystem" class="form-control" />
+                    <span asp-validation-for="OperatingSystem" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SoftwareVersion" class="control-label"></label>
+                    <input data-testid="softwareVersion" asp-for="SoftwareVersion" class="form-control" />
+                    <span asp-validation-for="SoftwareVersion" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Vendor" class="control-label"></label>
+                    <input data-testid="vendor" asp-for="Vendor" class="form-control" />
+                    <span asp-validation-for="Vendor" class="text-danger"></span>
+                </div>
+                <div style="display: none" class="form-group">
+                    <label asp-for="CaseId" class="control-label"></label>
+                    <input asp-for="CaseId" class="form-control" />
+                    <span asp-validation-for="CaseId" class="text-danger"></span>
+                </div>
+                <div style="display: none" class="form-group">
+                    <input asp-for="IsCheckedOut" type="hidden" value="false" />
+                    <span asp-validation-for="IsCheckedOut" class="text-danger"></span>
+                </div>
+                <div class="form-group" style="flex-direction: row; margin-top: 15px;">
+                    <a data-testid="cancelEdit" asp-action="Details"
+                       asp-route-id="@Model?.DeviceId"
+                       class="btn btn-secondary mr-2"
+                       style="margin-right: 5px;">Cancel</a>
+                    <input data-testid="editDevice" type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const isCheckedOutSwitch = document.getElementById("IsCheckedOutSwitch");
-            const toggleText = document.getElementById("toggleText");
-
-            isCheckedOutSwitch.addEventListener("change", function () {
-                const isCheckedOutHidden = document.querySelector('[name="IsCheckedOut"]'); // Define isCheckedOutHidden
-                isCheckedOutHidden.value = isCheckedOutSwitch.checked;
-                toggleText.textContent = isCheckedOutSwitch.checked ? "True" : "False";
-            });
-
-            // Ensure the checkbox starts as unchecked (False)
-            // isCheckedOutSwitch.checked = false;
-            const isCheckedOutHidden = document.querySelector('[name="IsCheckedOut"]');
-            // isCheckedOutHidden.value = "False";
-        });
-    </script>
-}
 <style>
 
     .control-label {

@@ -4,39 +4,41 @@
     ViewData["Title"] = "Delete";
 }
 
-<h1>Delete Device</h1>
+<div style="margin-top: 5rem">
+    <h1>Delete Device</h1>
 
-<h5>Are you sure you want to delete this device?</h5>
-<div>
-    <hr />
-    <dl class="flex-column">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DeviceName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DeviceName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DeviceType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DeviceType)
-        </dd>
-        <dt class="col-sm-2">
-            Checked Out
-            @* @Html.DisplayNameFor(model => model.IsCheckedOut) *@
-        </dt>
-        <dd class="col-sm-10">
-            @Model.IsCheckedOut.ToString()
-        </dd>
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="DeviceId" />
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-        <input type="submit" value="Delete" class="btn btn-danger" />
-    </form>
+    <h5>Are you sure you want to delete this device?</h5>
+    <div>
+        <hr />
+        <dl class="flex-column">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DeviceName)
+            </dt>
+            <dd data-testid="deviceName" class="col-sm-10">
+                @Html.DisplayFor(model => model.DeviceName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DeviceType)
+            </dt>
+            <dd data-testid="deviceType" class="col-sm-10">
+                @Html.DisplayFor(model => model.DeviceType)
+            </dd>
+            <dt class="col-sm-2">
+                Checked Out
+                @* @Html.DisplayNameFor(model => model.IsCheckedOut) *@
+            </dt>
+            <dd data-testid="checkedOut" class="col-sm-10">
+                @Model.IsCheckedOut.ToString()
+            </dd>
+            </dd>
+        </dl>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="DeviceId" />
+            <a data-testid="cancelDelete" asp-action="Index" class="btn btn-secondary">Cancel</a>
+            <input data-testid="deleteDevice" type="submit" value="Delete" class="btn btn-danger" />
+        </form>
+    </div>
 </div>
 
 <style>

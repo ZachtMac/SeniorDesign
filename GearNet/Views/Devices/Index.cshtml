@@ -8,7 +8,6 @@
 <head>
     <style>
         body {
-            background-image: url('assets/splashbackdrop.png');
             background-size: 100% 100%;
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -48,8 +47,10 @@
             min-width: 160px;
             overflow: auto;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
+            z-index: 2;
+            right: 0; /* Align with the right side of the button */
         }
+
 
             .dropdown-content a {
                 color: black;
@@ -111,6 +112,13 @@
             background-color: rgba(255, 255, 255, 0); /* Adjust the alpha (0.5) for the desired opacity */
         }
 
+        .table thead th {
+            position: sticky;
+            top: 0;
+            background-color: #fff; /* Optional: Set background color for sticky headers */
+            z-index: 1; /* Ensure it's above other content */
+        }
+
     </style>
 </head>
 <body>
@@ -125,141 +133,155 @@
                 <div class="col-5" style="display: flex; justify-content: flex-end;">
                     <div class="dropdown" style="margin-left: auto;">
                         <div style="display: flex">
-                            <a asp-action="Create" class="btn btn-success">Create New</a>
-                            <button id="dropdownButton" class="dropbtn" style="border-radius: 0.25rem; padding: 7.5px">
+                            <a data-testid="createDevice" asp-action="Create" class="btn btn-success">Create New</a>
+                            <button data-testid="searchDevice" id="dropdownButton" class="dropbtn" style="border-radius: 0.25rem; padding: 7.5px">
                                 Search <span id="arrowIcon"></span>
                             </button>
                         </div>
                         <div id="myDropdown" class="dropdown-content" style="padding: 10px; width: 250px">
-                            @if(ViewData.ContainsKey("deviceName"))
-                            {
-                            <div style="margin-bottom: 10px;">
-                                Name: <input type="text" name="deviceName" class="form-control" placeholder="Device Name..." value="@ViewData["deviceName"]" />
-                                </div>
-                            } else
+                            @if (ViewData.ContainsKey("deviceName"))
                             {
                                 <div style="margin-bottom: 10px;">
-                                    Name: <input type="text" name="deviceName" class="form-control" placeholder="Device Name..." />
+                                    Name: <input data-testid="searchDevicename" type="text" name="deviceName" class="form-control" placeholder="Device Name..." value="@ViewData["deviceName"]" />
+                                </div>
+                            }
+                            else
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    Name: <input data-testid="searchDevicename" type="text" name="deviceName" class="form-control" placeholder="Device Name..." />
                                 </div>
                             }
                             @if (ViewData.ContainsKey("deviceType"))
                             {
                                 <div style="margin-bottom: 10px;">
-                                    Type: <input type="text" name="deviceType" class="form-control" placeholder="Device Type..." value="@ViewData["deviceType"]" />
+                                    Type: <input data-testid="searchDeviceType" type="text" name="deviceType" class="form-control" placeholder="Device Type..." value="@ViewData["deviceType"]" />
                                 </div>
-                            } else
+                            }
+                            else
                             {
                                 <div style="margin-bottom: 10px;">
-                                    Type: <input type="text" name="deviceType" class="form-control" placeholder="Device Type..." />
+                                    Type: <input data-testid="searchDeviceType" type="text" name="deviceType" class="form-control" placeholder="Device Type..." />
                                 </div>
                             }
 
                             @if (ViewData.ContainsKey("rackRow"))
                             {
                                 <div style="margin-bottom: 10px;">
-                                    Row: <input type="number" name="rackRow" class="form-control" placeholder="Rack Row..." value="@ViewData["rackRow"]" />
+                                    Row: <input data-testid="searchRackRow" type="number" name="rackRow" class="form-control" placeholder="Rack Row..." value="@ViewData["rackRow"]" />
                                 </div>
-                            } else
+                            }
+                            else
                             {
                                 <div style="margin-bottom: 10px;">
-                                    Row: <input type="number" name="rackRow" class="form-control" placeholder="Rack Row..." />
+                                    Row: <input data-testid="searchRackRow" type="number" name="rackRow" class="form-control" placeholder="Rack Row..." />
                                 </div>
                             }
 
                             @if (ViewData.ContainsKey("rackCol"))
                             {
                                 <div style="margin-bottom: 10px;">
-                                    Column: <input type="number" name="rackCol" class="form-control" placeholder="Rack Column..." value="@ViewData["rackCol"]" />
+                                    Column: <input data-testid="searchRackCol" type="number" name="rackCol" class="form-control" placeholder="Rack Column..." value="@ViewData["rackCol"]" />
                                 </div>
-                            } else
+                            }
+                            else
                             {
                                 <div style="margin-bottom: 10px;">
-                                    Column: <input type="number" name="rackCol" class="form-control" placeholder="Rack Column..."  />
+                                    Column: <input data-testid="searchRackCol" type="number" name="rackCol" class="form-control" placeholder="Rack Column..." />
                                 </div>
                             }
                             <div style="margin-bottom: 10px;" class="dropdown-select">
                                 Checked Out:
-                                <select id="isCheckedOutSelect" name="isCheckedOut" class="form-control">
+                                <select data-testid="searchCheckOut" id="isCheckedOutSelect" name="isCheckedOut" class="form-control">
                                     <option style="color: grey" value="unselected" selected='@((string)ViewData["isCheckedOut"] == "unselected" ? "selected" : null)'>(Select All)</option>
-                                    <option value="true" selected='@((string)ViewData["isCheckedOut"] == "true" ? "selected" : null)'>True</option>
-                                    <option value="false" selected='@((string)ViewData["isCheckedOut"] == "false" ? "selected" : null)'>False</option>
+                                    <option data-testid="deviceOut" value="true" selected='@((string)ViewData["isCheckedOut"] == "true" ? "selected" : null)'>True</option>
+                                    <option data-testid="deviceIn" value="false" selected='@((string)ViewData["isCheckedOut"] == "false" ? "selected" : null)'>False</option>
                                 </select>
                             </div>
 
 
 
-                            <button type="submit" class="btn btn-primary btn-block" onclick="" style="margin-top: 10px;">Search</button>
-                            <button type="submit" class="btn btn-secondary btn-block" onclick="clearSearch()" style="margin-top: 10px;">Reset</button>
+                            <button data-testid="searchDeviceList" type="submit" class="btn btn-primary btn-block" onclick="" style="margin-top: 10px;">Search</button>
+                            <button data-testid="resetSearch" type="submit" class="btn btn-secondary btn-block" onclick="clearSearch()" style="margin-top: 10px;">Reset</button>
 
                         </div>
                     </div>
                 </div>
             </div>
         </form>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.DeviceName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.DeviceType)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.RackRow)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.RackCol)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.IsCheckedOut)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Case.CaseId)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Student.StudentId)
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
+        <div style="height: 620px; overflow-y: auto; margin-bottom: 0rem">
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.DeviceName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.DeviceType)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.RackRow)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.RackCol)
-                        </td>
-                        <td>
-                            @item.IsCheckedOut.ToString()
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CaseId)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.StudentId)
-                        </td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.DeviceId"
-                               class="btn btn-primary">Edit</a>
-                            <a asp-action="Details" asp-route-id="@item.DeviceId"
-                               class="btn btn-secondary">Details</a>
-                            <a asp-action="Delete" asp-route-id="@item.DeviceId"
-                               class="btn btn-danger">Delete</a>
-                        </td>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DeviceName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DeviceType)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.RackRow)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.RackCol)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IsCheckedOut)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Case.CaseId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Student.StudentId)
+                        </th>
+                        <th></th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @{
+                        int rowIndex = 1;
+                    }
+                    @foreach (var item in Model)
+                    {
+                        <tr data-testid="deviceListRow-@rowIndex">
+                            <td data-testid="listDeviceName">
+                                @Html.DisplayFor(modelItem => item.DeviceName)
+                            </td>
+                            <td data-testid="listDeviceType">
+                                @Html.DisplayFor(modelItem => item.DeviceType)
+                            </td>
+                            <td data-testid="listRackRow">
+                                @Html.DisplayFor(modelItem => item.RackRow)
+                            </td>
+                            <td data-testid="listRackCol">
+                                @Html.DisplayFor(modelItem => item.RackCol)
+                            </td>
+                            <td data-testid="listCheckedOut">
+                                @item.IsCheckedOut.ToString()
+                            </td>
+                            <td data-testid="listCaseId">
+                                @Html.DisplayFor(modelItem => item.CaseId)
+                            </td>
+                            <td data-testid="listStudentId">
+                                @Html.DisplayFor(modelItem => item.StudentId)
+                            </td>
+                            <td>
+                                <a data-testid="edit-@item.DeviceId" asp-action="Edit" asp-route-id="@item.DeviceId"
+                                   class="btn btn-primary">Edit</a>
+                                <a data-testid="details-@item.DeviceId" asp-action="Details" asp-route-id="@item.DeviceId"
+                                   class="btn btn-secondary">Details</a>
+                                <a data-testid="delete-@item.DeviceId" asp-action="Delete" asp-route-id="@item.DeviceId"
+                                   class="btn btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <nav aria-label="Page navigation example">
+            <ul id="pagination" class="pagination">
+                <!-- Pagination links will be dynamically generated here -->
+            </ul>
+        </nav>
     </div>
     <script>
         var searchValues = {};
@@ -318,3 +340,46 @@
     </script>
 </body>
 </html>
+@section scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        // Initialize pagination
+        $(document).ready(function () {
+            var rows = $('tbody').find('tr');
+            var pageSize = 10;
+            var pageCount = Math.ceil(rows.length / pageSize);
+
+            var paginationContainer = $('#pagination');
+
+            // Pagination links
+            for (var i = 1; i <= pageCount; i++) {
+                var li = $('<li></li>').addClass('page-item').attr('data-page', i);
+                var link = $('<a></a>').addClass('page-link').text(i);
+
+                li.append(link);
+                paginationContainer.append(li);
+            }
+
+            // Add active class to the first page link
+            paginationContainer.find('.page-item:first-child').addClass('active');
+
+            // Function to handle pagination
+            paginationContainer.on('click', '.page-item', function () {
+                var pageNumber = parseInt($(this).attr('data-page'));
+                var start = pageSize * (pageNumber - 1);
+                var end = start + pageSize;
+
+                rows.hide().slice(start, end).show();
+
+                // Remove active class from all pagination links
+                paginationContainer.find('.page-item').removeClass('active');
+                // Add active class to the selected pagination link
+                $(this).addClass('active');
+            });
+
+            // Show only the first page initially
+            paginationContainer.find('.page-item:first-child').click();
+        });
+    </script>
+}

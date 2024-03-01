@@ -4,72 +4,200 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<div style="margin-top: 5rem">
+    <h1>Case Details</h1>
 
-<div>
-    <h4>Case</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CaseName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CaseName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DateTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DateTime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Duration)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Duration)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Username)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Username)
-        </dd>
-    </dl>
+    <div>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.CaseName)
+            </dt>
+            <dd data-testid="detailCasename" class="col-sm-10">
+                @Html.DisplayFor(model => model.CaseName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DateTime)
+            </dt>
+            <dd data-testid="detailStartDate" class="col-sm-10">
+                @Html.DisplayFor(model => model.DateTime)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Duration)
+            </dt>
+            <dd data-testid="detailDuration" class="col-sm-10">
+                @Html.DisplayFor(model => model.Duration)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Username)
+            </dt>
+            <dd data-testid="detailUsername" class="col-sm-10">
+                @Html.DisplayFor(model => model.Username)
+            </dd>
+        </dl>
+    </div>
+    <div style="margin-bottom: 2.5%;">
+        <!-- Add margin to bottom -->
+        <a data-testid="editCase" asp-action="Edit" asp-route-id="@Model?.CaseId" class="btn btn-primary">Edit</a>
+        <a data-testid="backList" asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+
+    <div>
+        <div style="display: flex; justify-content: space-between">
+            <h4 class="float-left">Booked Devices</h4>
+            <a data-testid="bookDevices" asp-controller="Devices" asp-action="DeviceBooking" asp-route-id="@Model.CaseId" class="btn btn-success float-right">Book Devices</a>
+        </div>
+
+        <hr />
+        <div style="height: 360px; overflow-y: auto; margin-bottom: 0rem">
+            <table class="table" style="table-layout: fixed;">
+                <thead>
+                    <tr>
+                        <th>Device ID</th>
+                        <th>Device Name</th>
+                        <th>Device Type</th>
+                        <th>Operating System</th>
+                        <th>Software Version</th>
+                        <th>Vendor</th>
+                        <th>Rack Row</th>
+                        <th>Rack Column</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="deviceTableBody">
+                    @if (Model.Devices.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="8">
+                                No Devices Booked
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var device in Model.Devices)
+                        {
+                            <tr class="deviceRow" data-testid="@device.DeviceId">
+                                <td data-testid="deviceId">@device.DeviceId</td>
+                                <td data-testid="deviceName">@device.DeviceName</td>
+                                <td data-testid="deviceType">@device.DeviceType</td>
+                                <td data-testid="operatingSystem">@device.OperatingSystem</td>
+                                <td data-testid="softwareVersion">@device.SoftwareVersion</td>
+                                <td data-testid="vendor">@device.Vendor</td>
+                                <td data-testid="rackRow">@device.RackRow</td>
+                                <td data-testid="rackCol">@device.RackCol</td>
+                                <td>
+                                    <form asp-controller="Cases" asp-action="RemoveFromBookedDevices" method="post">
+                                        <input type="hidden" name="deviceId" value="@device.DeviceId" />
+                                        <input type="hidden" name="caseId" value="@Model.CaseId" />
+                                        <button data-testid="removeDevice" type="submit" class="btn btn-danger">Remove</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <nav aria-label="Page navigation example">
+            <ul id="pagination" class="pagination">
+                <!-- Pagination links will be dynamically generated here -->
+            </ul>
+        </nav>
+    </div>
 </div>
-<div>
-    <h4>Checked Out Devices</h4>
-    <hr />
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Device ID</th>
-                <th>Device Name</th>
-                <th>Device Type</th>
-                <th>Operating System</th>
-                <th>Software Version</th>
-                <th>Vendor</th>
-                <th>Rack Row</th>
-                <th>Rack Column</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var device in Model.Devices)
-            {
-                <tr>
-                    <td>@device.DeviceId</td>
-                    <td>@device.DeviceName</td>
-                    <td>@device.DeviceType</td>
-                    <td>@device.OperatingSystem</td>
-                    <td>@device.SoftwareVersion</td>
-                    <td>@device.Vendor</td>
-                    <td>@device.RackRow</td>
-                    <td>@device.RackCol</td>
-                </tr>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            var pageSize = 5;
+            var rows = $('.deviceRow');
+            var paginationContainer = $('#pagination');
+
+            // Function to display devices for a given page
+            function displayDevices(pageNumber) {
+                var startIndex = (pageNumber - 1) * pageSize;
+                var endIndex = startIndex + pageSize;
+
+                // Hide all devices
+                rows.hide();
+
+                // Show devices for the current page
+                rows.slice(startIndex, endIndex).show();
             }
-        </tbody>
-    </table>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.CaseId" class="btn btn-primary">Edit</a>
-    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-</div>
+
+            // Pagination links
+            function generatePagination() {
+                var pageCount = Math.ceil(rows.length / pageSize);
+                paginationContainer.empty(); // Clear existing pagination links
+
+                for (var i = 1; i <= pageCount; i++) {
+                    var li = $('<li></li>').addClass('page-item');
+                    var link = $('<a></a>').addClass('page-link').attr('href', '#').text(i);
+
+                    li.append(link);
+                    paginationContainer.append(li);
+                }
+
+                // Add active class to the first page link
+                paginationContainer.find('.page-item:first-child').addClass('active');
+            }
+
+            // Display devices for the first page initially
+            displayDevices(1);
+
+            // Generate pagination initially
+            generatePagination();
+
+            // Function to handle pagination
+            paginationContainer.on('click', '.page-item', function () {
+                var pageNumber = parseInt($(this).text());
+
+                // Remove active class from all pagination links
+                paginationContainer.find('.page-item').removeClass('active');
+
+                // Add active class to the selected pagination link
+                $(this).addClass('active');
+
+                // Display devices for the selected page
+                displayDevices(pageNumber);
+            });
+
+            // Event handler to remove device rows
+            $(document).on('click', '[data-testid="removeDevice"]', function (e) {
+                e.preventDefault();
+
+                var row = $(this).closest('tr');
+                var pageIndex = parseInt($('.pagination').find('.active').text());
+
+                // Submit the form via AJAX
+                var form = row.find('form');
+                $.post(form.attr('action'), form.serialize(), function () {
+                    // Find the parent <tr> element and remove it with a transition
+                    row.fadeOut(400, function () {
+                        $(this).remove();
+
+                        // Update device rows
+                        rows = $('.deviceRow');
+                        var pageCount = Math.ceil(rows.length / pageSize);
+                        var activePage = parseInt($('.pagination').find('.active').text());
+                        if ((rows.length % 5) === 0) {
+                            generatePagination();
+                        }
+                        // Regenerate pagination if necessary
+                        if (activePage > pageCount) {
+                            displayDevices(pageCount); // Display last page if current page is beyond new page count
+                        } else {
+                            displayDevices(activePage); // Maintain the same page after removal
+                        }
+
+                        // Check if there are no rows left
+                        if (rows.length === 0) {
+                            $('#deviceTableBody').append('<tr><td colspan="9">No Devices Booked</td></tr>');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+}
+

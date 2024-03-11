@@ -9,189 +9,6 @@
 <html>
 <head>
 
-</head>
-<body>
-    <div class="tableForm">
-        <form method="get" asp-action="Index">
-            <div class="row" style="width: 100%; flex-wrap: nowrap">
-                <div class="col-7" style="margin-right: 5px;">
-                    <div class="form-group">
-                        <h1>Cases</h1>
-                    </div>
-                </div>
-                <div class="col-5" style="display: flex; justify-content: flex-end;">
-                    <div class="dropdown" style="margin-left: auto;">
-                        <div style="display: flex">
-                            <a data-testid="createCase" asp-action="Create" class="green-hover btn btn-success" style="margin-right: 10px;">Create New</a>
-                            <button data-testid="searchCase" id="dropdownButton" class="dropbtn" style="border-radius: 0.25rem; padding: 7.5px;">
-                                Search <span id="arrowIcon"></span>
-                            </button>
-                        </div>
-
-                        <div id="myDropdown" class="dropdown-content" style="padding: 10px; width: 250px">
-                            @if (ViewData.ContainsKey("caseName"))
-                            {
-                                <div style="margin-bottom: 10px;">
-                                    Case Name: <input data-testid="searchCasename" type="text" name="caseName" class="form-control" placeholder="Case Name..." value="@ViewData["caseName"]" />
-                                </div>
-                            }
-                            else
-                            {
-                                <div style="margin-bottom: 10px;">
-                                    Case Name: <input data-testid="searchCasename" type="text" name="caseName" class="form-control" placeholder="Case Name..." />
-                                </div>
-                            }
-                            <div style="margin-bottom: 10px;">
-                                Start Date:
-                                @if (ViewData.ContainsKey("startDate"))
-                                {
-                                    <input data-testid="searchStartdate" type="date" name="startDate" class="form-control" placeholder="" value="@ViewData["startDate"]" />
-                                }
-                                else
-                                {
-                                    <input data-testid="searchStartdate" type="date" name="startDate" class="form-control" placeholder="" />
-                                }
-                            </div>
-
-
-                            @if (ViewData.ContainsKey("duration"))
-                            {
-                                <div style="margin-bottom: 10px;">
-                                    Duration: <input data-testid="searchDuration" type="number" name="duration" class="form-control" placeholder="Duration..." value="@ViewData["duration"]" />
-                                </div>
-                            }
-                            else
-                            {
-                                <div style="margin-bottom: 10px;">
-                                    Duration: <input data-testid="searchDuration" type="number" name="duration" class="form-control" placeholder="Duration..." />
-                                </div>
-                            }
-                            @if (ViewData.ContainsKey("studentUser"))
-                            {
-                                <div style="margin-bottom: 10px;">
-                                    Student Username: <input data-testid="searchUsername" type="text" name="studentUser" class="form-control" placeholder="Student Username..." value="@ViewData["studentUser"]" />
-                                </div>
-                            }
-                            else
-                            {
-                                <div style="margin-bottom: 10px;">
-                                    Student Username: <input data-testid="searchUsername" type="text" name="studentUser" class="form-control" placeholder="Student Username..." />
-                                </div>
-                            }
-                            <button data-testid="searchCaselist" type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">Search</button>
-                            <button data-testid="resetSearch" type="submit" class="btn btn-secondary btn-block" onclick="clearSearch()" style="margin-top: 10px;">Reset</button>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-        <div style="height: 620px; overflow-y: auto; margin-bottom: 0rem">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => model.CaseName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.DateTime)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Duration)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Username)
-                        </th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @{
-                        int rowIndex = 1;
-                    }
-                    @foreach (var item in Model)
-                    {
-                        <tr data-testid="caseListRow-@rowIndex">
-                            <td data-testid="listCasename">
-                                @Html.DisplayFor(modelItem => item.CaseName)
-                            </td>
-                            <td data-testid="listStartdate">
-                                @Html.DisplayFor(modelItem => item.DateTime)
-                            </td>
-                            <td data-testid="listDuration">
-                                @Html.DisplayFor(modelItem => item.Duration)
-                            </td>
-                            <td data-testid="listUsername">
-                                @Html.DisplayFor(modelItem => item.Username)
-                            </td>
-                            <td>
-                                <a data-testid="edit-@item.CaseId" asp-action="Edit" asp-route-id="@item.CaseId"
-                                   class="btn btn-primary">Edit</a>
-                                <a data-testid="details-@item.CaseId" asp-action="Details" asp-route-id="@item.CaseId"
-                                   class="btn btn-secondary">Details</a>
-                                <a data-testid="delete-@item.CaseId" asp-action="Delete" asp-route-id="@item.CaseId"
-                                   class="btn btn-danger">Delete</a>
-                            </td>
-                        </tr>
-                        rowIndex++;
-                    }
-                </tbody>
-
-            </table>
-        </div>
-        <nav aria-label="Page navigation example">
-            <ul id="pagination" class="pagination">
-                <!-- Pagination links will be dynamically generated here -->
-            </ul>
-        </nav>
-    </div>
-
-    <script>
-        var searchValues = {};
-        document.getElementById("dropdownButton").addEventListener("click", function (event) {
-            event.preventDefault();
-            toggleDropdown();
-        });
-
-
-        document.addEventListener("DOMContentLoaded", function () {
-            const isCheckedOutSwitch = document.getElementById("IsCheckedOutSwitch");
-            const isCheckedOutHidden = document.querySelector('input[name="isCheckedOut"]');
-            const toggleText = document.getElementById("toggleText");
-
-            isCheckedOutSwitch.addEventListener("change", function () {
-                if (isCheckedOutSwitch.checked) {
-                    isCheckedOutHidden.value = "True";
-                    toggleText.textContent = "True";
-                } else {
-                    isCheckedOutHidden.value = "False";
-                    toggleText.textContent = "False";
-                }
-            });
-
-            isCheckedOutHidden.value = isCheckedOutSwitch.checked ? "True" : "False";
-        });
-
-        function toggleDropdown() {
-            var dropdown = document.getElementById("myDropdown");
-            var button = document.getElementById("dropdownButton");
-
-            if (dropdown.classList.contains("show")) {
-                dropdown.classList.remove("show");
-                button.classList.remove("active");
-            } else {
-                dropdown.classList.add("show");
-                button.classList.add("active");
-            }
-        }
-
-        function clearSearch() {
-            document.querySelector('input[name="caseName"]').value = "";
-            document.querySelector('input[name="startDate"]').value = "";
-            document.querySelector('input[name="duration"]').value = "";
-            document.querySelector('input[name="studentUser"]').value = "";
-        }
-    </script>
     <style>
         body {
             background-size: 100% 100%;
@@ -336,12 +153,256 @@
                 border-radius: 50%;
             }
     </style>
+</head>
+<body>
+    <div class="tableForm">
+        <form method="get" asp-action="Index">
+            <div class="row" style="width: 100%; flex-wrap: nowrap">
+                <div class="col-7" style="margin-right: 5px;">
+                    <div class="form-group">
+                        <h1>Cases</h1>
+                    </div>
+                </div>
+                <div class="col-5" style="display: flex; justify-content: flex-end;">
+                    <div class="dropdown" style="margin-left: auto;">
+                        <div style="display: flex">
+                            <a data-testid="createCase" asp-action="Create" class="green-hover btn btn-success" style="margin-right: 10px;">Create New</a>
+                            <button data-testid="searchCase" id="dropdownButton" class="dropbtn" style="border-radius: 0.25rem; padding: 7.5px;">
+                                Search <span id="arrowIcon"></span>
+                            </button>
+                        </div>
+
+                        <div id="myDropdown" class="dropdown-content" style="padding: 10px; width: 250px">
+                            @if (ViewData.ContainsKey("caseName"))
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    Case Name: <input data-testid="searchCasename" type="text" name="caseName" class="form-control" placeholder="Case Name..." value="@ViewData["caseName"]" />
+                                </div>
+                            }
+                            else
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    Case Name: <input data-testid="searchCasename" type="text" name="caseName" class="form-control" placeholder="Case Name..." />
+                                </div>
+                            }
+                            <div style="margin-bottom: 10px;">
+                                Start Date:
+                                @if (ViewData.ContainsKey("startDate"))
+                                {
+                                    <input data-testid="searchStartdate" type="date" name="startDate" class="form-control" placeholder="" value="@ViewData["startDate"]" />
+                                }
+                                else
+                                {
+                                    <input data-testid="searchStartdate" type="date" name="startDate" class="form-control" placeholder="" />
+                                }
+                            </div>
+
+
+                            @if (ViewData.ContainsKey("duration"))
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    Duration: <input data-testid="searchDuration" type="number" name="duration" class="form-control" placeholder="Duration..." value="@ViewData["duration"]" />
+                                </div>
+                            }
+                            else
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    Duration: <input data-testid="searchDuration" type="number" name="duration" class="form-control" placeholder="Duration..." />
+                                </div>
+                            }
+                            @if (ViewData.ContainsKey("studentUser"))
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    Student Username: <input data-testid="searchUsername" type="text" name="studentUser" class="form-control" placeholder="Student Username..." value="@ViewData["studentUser"]" />
+                                </div>
+                            }
+                            else
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    Student Username: <input data-testid="searchUsername" type="text" name="studentUser" class="form-control" placeholder="Student Username..." />
+                                </div>
+                            }
+                            <button data-testid="searchCaselist" type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">Search</button>
+                            <button data-testid="resetSearch" type="submit" class="btn btn-secondary btn-block" onclick="clearSearch()" style="margin-top: 10px;">Reset</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div style="height: 620px; overflow-y: auto; margin-bottom: 0rem">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CaseName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DateTime)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Duration)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Username)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int rowIndex = 1;
+                    }
+                    @foreach (var item in Model)
+                    {
+                        <tr data-testid="caseListRow-@rowIndex">
+                            <td data-testid="listCasename">
+                                @Html.DisplayFor(modelItem => item.CaseName)
+                            </td>
+                            <td data-testid="listStartdate">
+                                @Html.DisplayFor(modelItem => item.DateTime)
+                            </td>
+                            <td data-testid="listDuration">
+                                @Html.DisplayFor(modelItem => item.Duration)
+                            </td>
+                            <td data-testid="listUsername">
+                                @Html.DisplayFor(modelItem => item.Username)
+                            </td>
+                            <td class="button-container">
+                                <div class="button-box button-box-1">
+                                    <a data-testid="edit-@item.CaseId" asp-action="Edit" asp-route-id="@item.CaseId"
+                                       class="btn btn-primary">Edit</a>
+                                    <a data-testid="details-@item.CaseId" asp-action="Details" asp-route-id="@item.CaseId"
+                                       class="btn btn-secondary">Details</a>
+                                    <a data-testid="delete-@item.CaseId" asp-action="Delete" asp-route-id="@item.CaseId"
+                                       class="btn btn-danger">Delete</a>
+                                </div>
+                                <div class="button-box button-box-2" style="flex-direction:column">
+                                    <a data-testid="edit-@item.CaseId" asp-action="Edit" asp-route-id="@item.CaseId"
+                                       class="btn btn-primary">Edit</a>
+                                    <a data-testid="details-@item.CaseId" asp-action="Details" asp-route-id="@item.CaseId"
+                                       class="btn btn-secondary">Details</a>
+                                    <a data-testid="delete-@item.CaseId" asp-action="Delete" asp-route-id="@item.CaseId"
+                                       class="btn btn-danger">Delete</a>
+                                </div>
+
+                            </td>
+                        </tr>
+                        rowIndex++;
+                    }
+                </tbody>
+
+            </table>
+        </div>
+        <nav aria-label="Page navigation example">
+            <ul id="pagination" class="pagination">
+                <!-- Pagination links will be dynamically generated here -->
+            </ul>
+        </nav>
+    </div>
+
 </body>
 </html>
 
 @section scripts {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Calculate the total width of all buttons in buttonBox1 only once
+            var buttonBox1 = document.querySelector('.button-box-1');
+            var totalButtonsWidth = 0;
+            buttonBox1.childNodes.forEach(function (node) {
+                if (node.offsetWidth) {
+                    totalButtonsWidth += node.offsetWidth;
+                }
+            });
 
+            function checkButtonContainerWrap() {
+                // Iterate through each row
+                document.querySelectorAll('tbody tr').forEach(function (row) {
+                    var buttonContainer = row.querySelector('.button-container');
+                    var buttonBox1 = row.querySelector('.button-box-1');
+                    var buttonBox2 = row.querySelector('.button-box-2');
+                    var availableWidth = buttonContainer.clientWidth;
+
+                    // Toggle the visibility of buttonBox1 or buttonBox2 based on available space
+                    if (buttonBox1.style.display !== 'none') {
+                        if (totalButtonsWidth >= availableWidth) {
+                            buttonBox1.style.display = 'none';
+                            buttonBox2.style.display = 'flex';
+                        }
+                        else {
+                            buttonBox1.style.display = 'block';
+                            buttonBox2.style.display = 'none';
+                        }
+                    }
+                    else {
+                        if (totalButtonsWidth * 0.75 >= availableWidth) {
+                            buttonBox1.style.display = 'none';
+                            buttonBox2.style.display = 'flex';
+                        }
+                        else {
+                            buttonBox1.style.display = 'block';
+                            buttonBox2.style.display = 'none';
+                        }
+                    }
+                });
+            }
+
+            // Call the function initially
+            checkButtonContainerWrap();
+
+            // Add event listener for window resize
+            window.addEventListener('resize', checkButtonContainerWrap);
+        });
+    </script>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var searchValues = {};
+            document.getElementById("dropdownButton").addEventListener("click", function (event) {
+                event.preventDefault();
+                toggleDropdown();
+            });
+
+            const isCheckedOutSwitch = document.getElementById("IsCheckedOutSwitch");
+            const isCheckedOutHidden = document.querySelector('input[name="isCheckedOut"]');
+            const toggleText = document.getElementById("toggleText");
+
+            isCheckedOutSwitch.addEventListener("change", function () {
+                if (isCheckedOutSwitch.checked) {
+                    isCheckedOutHidden.value = "True";
+                    toggleText.textContent = "True";
+                } else {
+                    isCheckedOutHidden.value = "False";
+                    toggleText.textContent = "False";
+                }
+            });
+
+            isCheckedOutHidden.value = isCheckedOutSwitch.checked ? "True" : "False";
+        });
+
+        function toggleDropdown() {
+            var dropdown = document.getElementById("myDropdown");
+            var button = document.getElementById("dropdownButton");
+
+            if (dropdown.classList.contains("show")) {
+                dropdown.classList.remove("show");
+                button.classList.remove("active");
+            } else {
+                dropdown.classList.add("show");
+                button.classList.add("active");
+            }
+        }
+
+        function clearSearch() {
+            document.querySelector('input[name="caseName"]').value = "";
+            document.querySelector('input[name="startDate"]').value = "";
+            document.querySelector('input[name="duration"]').value = "";
+            document.querySelector('input[name="studentUser"]').value = "";
+        }
+    </script>
     <script>
         // Initialize pagination
         $(document).ready(function () {

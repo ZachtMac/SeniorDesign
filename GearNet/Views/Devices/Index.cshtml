@@ -264,13 +264,23 @@
                             <td data-testid="listStudentId">
                                 @Html.DisplayFor(modelItem => item.StudentId)
                             </td>
-                            <td>
-                                <a data-testid="edit-@item.DeviceId" asp-action="Edit" asp-route-id="@item.DeviceId"
-                                   class="btn btn-primary">Edit</a>
-                                <a data-testid="details-@item.DeviceId" asp-action="Details" asp-route-id="@item.DeviceId"
-                                   class="btn btn-secondary">Details</a>
-                                <a data-testid="delete-@item.DeviceId" asp-action="Delete" asp-route-id="@item.DeviceId"
-                                   class="btn btn-danger">Delete</a>
+                            <td class="button-container">
+                                <div class="button-box button-box-1">
+                                    <a data-testid="edit-@item.DeviceId" asp-action="Edit" asp-route-id="@item.DeviceId"
+                                       class="btn btn-primary">Edit</a>
+                                    <a data-testid="details-@item.DeviceId" asp-action="Details" asp-route-id="@item.DeviceId"
+                                       class="btn btn-secondary">Details</a>
+                                    <a data-testid="delete-@item.DeviceId" asp-action="Delete" asp-route-id="@item.DeviceId"
+                                       class="btn btn-danger">Delete</a>
+                                </div>
+                                <div class="button-box button-box-2" style="flex-direction:column">
+                                    <a data-testid="edit-@item.DeviceId" asp-action="Edit" asp-route-id="@item.DeviceId"
+                                       class="btn btn-primary">Edit</a>
+                                    <a data-testid="details-@item.DeviceId" asp-action="Details" asp-route-id="@item.DeviceId"
+                                       class="btn btn-secondary">Details</a>
+                                    <a data-testid="delete-@item.DeviceId" asp-action="Delete" asp-route-id="@item.DeviceId"
+                                       class="btn btn-danger">Delete</a>
+                                </div>
                             </td>
                         </tr>
                     }
@@ -283,6 +293,64 @@
             </ul>
         </nav>
     </div>
+</body>
+</html>
+@section scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Calculate the total width of all buttons in buttonBox1 only once
+            var buttonBox1 = document.querySelector('.button-box-1');
+            var totalButtonsWidth = 0;
+            buttonBox1.childNodes.forEach(function (node) {
+                if (node.offsetWidth) {
+                    totalButtonsWidth += node.offsetWidth;
+                }
+            });
+
+            function checkButtonContainerWrap() {
+                // Iterate through each row
+                document.querySelectorAll('tbody tr').forEach(function (row) {
+                    var buttonContainer = row.querySelector('.button-container');
+                    var buttonBox1 = row.querySelector('.button-box-1');
+                    var buttonBox2 = row.querySelector('.button-box-2');
+                    var availableWidth = buttonContainer.clientWidth;
+
+                    // Toggle the visibility of buttonBox1 or buttonBox2 based on available space
+                    if (buttonBox1.style.display !== 'none') {
+                        if (totalButtonsWidth >= availableWidth*0.75) {
+                            buttonBox1.style.display = 'none';
+                            buttonBox2.style.display = 'flex';
+                            console.log("1a")
+                        }
+                        else {
+                            buttonBox1.style.display = 'block';
+                            buttonBox2.style.display = 'none';
+                            console.log("2a")
+                        }
+                    }
+                    else {
+                        if (totalButtonsWidth * 0.75 >= availableWidth) {
+                            buttonBox1.style.display = 'none';
+                            buttonBox2.style.display = 'flex';
+                            console.log("1b")
+                        }
+                        else {
+                            buttonBox1.style.display = 'block';
+                            buttonBox2.style.display = 'none';
+                            console.log("2b")
+                        }
+                    }
+                });
+            }
+
+            // Call the function initially
+            checkButtonContainerWrap();
+
+            // Add event listener for window resize
+            window.addEventListener('resize', checkButtonContainerWrap);
+        });
+    </script>
     <script>
         var searchValues = {};
         document.getElementById("dropdownButton").addEventListener("click", function (event) {
@@ -338,11 +406,6 @@
             document.querySelector('input[name="studentId"]').value = "";
         }
     </script>
-</body>
-</html>
-@section scripts {
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
     <script>
         // Initialize pagination
         $(document).ready(function () {

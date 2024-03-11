@@ -123,7 +123,7 @@
                         if ((device.IsCheckedOut == null || device.IsCheckedOut == false) &&
                         !((List<GearNet.Entities.Device>)ViewData["BookedDevices"]).Any(bookedDevice => bookedDevice.DeviceId == device.DeviceId))
                         {
-                            <tr class="deviceRow" data-testid="deviceListRow-@rowIndex">"
+                            <tr class="deviceRow" data-testid="deviceListRow-@rowIndex">
                                 <td data-testid="listDeviceName">
                                     @Html.DisplayFor(modelItem => device.DeviceName)
                                 </td>

@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    
+
 </head>
 <body>
     <div class="tableForm">
@@ -22,11 +22,12 @@
                 <div class="col-5" style="display: flex; justify-content: flex-end;">
                     <div class="dropdown" style="margin-left: auto;">
                         <div style="display: flex">
-                            <a data-testid="createCase" asp-action="Create" class="green-hover btn btn-success">Create New</a>
-                            <button data-testid="searchCase" id="dropdownButton" class="dropbtn" style="border-radius: 0.25rem; padding: 7.5px">
+                            <a data-testid="createCase" asp-action="Create" class="green-hover btn btn-success" style="margin-right: 10px;">Create New</a>
+                            <button data-testid="searchCase" id="dropdownButton" class="dropbtn" style="border-radius: 0.25rem; padding: 7.5px;">
                                 Search <span id="arrowIcon"></span>
                             </button>
                         </div>
+
                         <div id="myDropdown" class="dropdown-content" style="padding: 10px; width: 250px">
                             @if (ViewData.ContainsKey("caseName"))
                             {
@@ -86,57 +87,57 @@
             </div>
         </form>
         <div style="height: 620px; overflow-y: auto; margin-bottom: 0rem">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.CaseName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.DateTime)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Duration)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Username)
-                    </th>
-                    <th ></th>
-                </tr>
-            </thead>
-            <tbody>
-                @{
-                    int rowIndex = 1;
-                }
-                @foreach (var item in Model)
-                {
-                    <tr data-testid="caseListRow-@rowIndex">
-                        <td data-testid="listCasename">
-                            @Html.DisplayFor(modelItem => item.CaseName)
-                        </td>
-                        <td data-testid="listStartdate">
-                            @Html.DisplayFor(modelItem => item.DateTime)
-                        </td>
-                        <td data-testid="listDuration">
-                            @Html.DisplayFor(modelItem => item.Duration)
-                        </td>
-                        <td data-testid="listUsername">
-                            @Html.DisplayFor(modelItem => item.Username)
-                        </td>
-                        <td>
-                            <a data-testid="edit-@item.CaseId" asp-action="Edit" asp-route-id="@item.CaseId"
-                               class="btn btn-primary">Edit</a>
-                            <a data-testid="details-@item.CaseId" asp-action="Details" asp-route-id="@item.CaseId"
-                               class="btn btn-secondary">Details</a>
-                            <a data-testid="delete-@item.CaseId" asp-action="Delete" asp-route-id="@item.CaseId"
-                               class="btn btn-danger">Delete</a>
-                        </td>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CaseName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DateTime)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Duration)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Username)
+                        </th>
+                        <th></th>
                     </tr>
-                    rowIndex++;
-                }
-            </tbody>
+                </thead>
+                <tbody>
+                    @{
+                        int rowIndex = 1;
+                    }
+                    @foreach (var item in Model)
+                    {
+                        <tr data-testid="caseListRow-@rowIndex">
+                            <td data-testid="listCasename">
+                                @Html.DisplayFor(modelItem => item.CaseName)
+                            </td>
+                            <td data-testid="listStartdate">
+                                @Html.DisplayFor(modelItem => item.DateTime)
+                            </td>
+                            <td data-testid="listDuration">
+                                @Html.DisplayFor(modelItem => item.Duration)
+                            </td>
+                            <td data-testid="listUsername">
+                                @Html.DisplayFor(modelItem => item.Username)
+                            </td>
+                            <td>
+                                <a data-testid="edit-@item.CaseId" asp-action="Edit" asp-route-id="@item.CaseId"
+                                   class="btn btn-primary">Edit</a>
+                                <a data-testid="details-@item.CaseId" asp-action="Details" asp-route-id="@item.CaseId"
+                                   class="btn btn-secondary">Details</a>
+                                <a data-testid="delete-@item.CaseId" asp-action="Delete" asp-route-id="@item.CaseId"
+                                   class="btn btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                        rowIndex++;
+                    }
+                </tbody>
 
-        </table>
+            </table>
         </div>
         <nav aria-label="Page navigation example">
             <ul id="pagination" class="pagination">
@@ -193,7 +194,6 @@
     </script>
     <style>
         body {
-            
             background-size: 100% 100%;
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -320,7 +320,6 @@
 
         table {
             background-color: rgba(255, 255, 255, 0); /* Adjust the alpha (0.5) for the desired opacity */
-
         }
 
         .green-hover:hover {

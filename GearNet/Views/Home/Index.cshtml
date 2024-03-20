@@ -9,7 +9,6 @@
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            background: url('~/assets/van-tay-media-pc_HmXZ0e_w-unsplash.jpg') no-repeat center center fixed;
             background-size: cover;
             height: 100%;
         }
@@ -36,7 +35,7 @@
 
         .scrollOver {
             margin-bottom: 2.5rem;
-            margin-top: -3rem; /* Adjusted to move it higher up */
+            margin-top: -5vh; /* Adjusted to move it higher up */
             background-color: white;
             padding: 20px;
             border-radius: 10px;
@@ -66,14 +65,15 @@
             line-height: 1.6;
         }
     </style>
+
 </head>
 <body>
-    <div class="background-overlay" data-testid="launchPage" >
+    <div class="background-overlay" data-testid="launchPage">
         <div class="content">
             <div class="backImage">
                 <img src="~/assets/untitled design.png" />
             </div>
-            <div class="scrollOver">
+            <div class="scrollOver" id="scrollText">
                 <h1>Welcome to GearNet</h1>
                 <h4>
                     GEARNET is a pioneering project aimed at enhancing networking education at the University of Cincinnati. By providing a hands-on learning environment through a web-based application and physical lab setup, GEARNET equips students with practical networking skills crucial for real-world challenges. Through collaboration with faculty and students, GEARNET seeks to elevate UC's academic environment and better prepare graduates for future careers.

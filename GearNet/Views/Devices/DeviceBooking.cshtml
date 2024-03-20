@@ -238,6 +238,7 @@
             </ul>
         </nav>
         <form id="checkoutForm" action="/cases/devices/checkout" method="post">
+
             <input type="hidden" name="caseId" value="@ViewBag.CaseId" />
             <input type="hidden" name="deviceIds" id="deviceIdsInput" />
             <a data-testid="cancelBook" asp-controller="Cases" asp-action="CaseSelection" class="btn btn-secondary">Cancel</a>
@@ -355,7 +356,17 @@
 @section scripts {
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Disable checkout button on window load
+        window.addEventListener('load', function () {
+            document.getElementById('checkoutButton').disabled = true;
+        });
 
+        // Re-enable checkout button when the entire page (including images, CSS, etc.) has loaded
+        window.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('checkoutButton').disabled = false;
+        });
+    </script>
     @* Session handling *@
     <script>
         function clearBookedDevicesSession() {

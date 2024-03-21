@@ -401,5 +401,24 @@ namespace GearNet.Controllers
 
             return NoContent();
         }
+
+        [HttpPost]
+        public IActionResult GenerateTelnetLink(List<int> deviceIds, int portNumber)
+        {
+            var devices = _context.Devices.Where(d => deviceIds.Contains(d.DeviceId)).ToList();
+
+            var deviceWithStaticIP = devices.FirstOrDefault(d => d.Address != null);
+
+            if (deviceWithStaticIP != null)
+            {
+                string link = $"telnet://{deviceWithStaticIP.Address}:205{portNumber}";
+
+                return Content(link);
+            }
+            else
+            {
+                return BadRequest("No comm device with a static IP address found.");
+            }
+        }
     }
 }

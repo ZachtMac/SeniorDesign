@@ -163,7 +163,7 @@ namespace GearNet.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DeviceId,DeviceName,DeviceType,RackRow,RackCol,OperatingSystem,SoftwareVersion,Vendor,IsCheckedOut")] Device device)
+        public async Task<IActionResult> Create([Bind("DeviceId,DeviceName,DeviceType,RackRow,RackCol,OperatingSystem,SoftwareVersion,Vendor,Address,IsCheckedOut")] Device device)
         {
             if (ModelState.IsValid)
             {
@@ -195,7 +195,7 @@ namespace GearNet.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DeviceId,DeviceName,DeviceType,RackRow,RackCol,OperatingSystem,SoftwareVersion,Vendor,IsCheckedOut")] Device device)
+        public async Task<IActionResult> Edit(int id, [Bind("DeviceId,DeviceName,DeviceType,RackRow,RackCol,OperatingSystem,SoftwareVersion,Vendor,Address,IsCheckedOut")] Device device)
         {
             if (id != device.DeviceId)
             {

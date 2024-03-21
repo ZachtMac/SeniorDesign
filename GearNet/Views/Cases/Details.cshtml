@@ -61,6 +61,8 @@
                         <th>Vendor</th>
                         <th>Rack Row</th>
                         <th>Rack Column</th>
+                        <th>Static Address</th>
+                        <th></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -86,12 +88,19 @@
                                 <td data-testid="vendor">@device.Vendor</td>
                                 <td data-testid="rackRow">@device.RackRow</td>
                                 <td data-testid="rackCol">@device.RackCol</td>
+                                <td data-testid="address">@device.Address</td>
                                 <td>
-                                    <form asp-controller="Cases" asp-action="RemoveFromBookedDevices" method="post">
-                                        <input type="hidden" name="deviceId" value="@device.DeviceId" />
-                                        <input type="hidden" name="caseId" value="@Model.CaseId" />
-                                        <button data-testid="removeDevice" type="submit" class="btn btn-danger">Remove</button>
-                                    </form>
+                                    <div class="button-container">
+                                        <form asp-controller="Cases" asp-action="RemoveFromBookedDevices" method="post">
+                                            <input type="hidden" name="deviceId" value="@device.DeviceId" />
+                                            <input type="hidden" name="caseId" value="@Model.CaseId" />
+                                            <button data-testid="removeDevice" type="submit" class="btn btn-danger remove-device-btn">Remove</button>
+                                        </form>
+                                        @if (device.Address == null)
+                                        {
+                                            <button data-testid="createLink" class="btn btn-primary create-link-btn" onclick="openPortInputPopup('@device.DeviceId')">Create Console Link</button>
+                                        }
+                                    </div>
                                 </td>
                             </tr>
                         }
@@ -198,6 +207,48 @@
                 });
             });
         });
+        function openPortInputPopup(deviceId) {
+            var portNumber = prompt("Please enter the port number:");
+            if (portNumber !== null) {
+                var deviceIds = [];
+                @foreach (var device in Model.Devices)
+                {
+                    <text>deviceIds.push('@device.DeviceId'); </text>
+                }
+                $.ajax({
+                    url: '/Cases/GenerateTelnetLink',
+                    type: 'POST',
+                    data: { deviceIds: deviceIds, portNumber: portNumber },
+                    success: function (data) {
+                        alert("Link generated: " + data);
+                    },
+                    error: function () {
+                        alert("Failed to generate link. Please ensure you have a comm server with a valid IP Address");
+                    }
+                });
+            }
+        }
     </script>
+    <style>
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .remove-device-btn {
+            flex-grow: 1;
+            margin-right: 30px;
+        }
+
+        .create-link-btn {
+            flex-grow: 1;
+            white-space: nowrap;
+        }
+
+        .container {
+            max-width: 1600px;
+        }
+    </style>
 }
 

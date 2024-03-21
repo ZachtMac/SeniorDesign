@@ -32,6 +32,9 @@ namespace GearNet.Entities
         public int? RackCol { get; set; }
         [DisplayName("Checked Out?")]
         public bool? IsCheckedOut { get; set; }
+        [MaxLength(30)]
+        [DisplayName("Static IP Address")]
+        public string? Address { get; set; }
         public int? CaseId { get; set; } //Necessary for relationship modeling
         [ForeignKey("CaseId")]
         public virtual Case? Case { get; set; }

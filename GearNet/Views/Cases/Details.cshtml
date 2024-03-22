@@ -94,12 +94,16 @@
                                         <form asp-controller="Cases" asp-action="RemoveFromBookedDevices" method="post">
                                             <input type="hidden" name="deviceId" value="@device.DeviceId" />
                                             <input type="hidden" name="caseId" value="@Model.CaseId" />
+                                            @if (device.Address == null)
+                                            {
+                                                <button data-testid="createLink" class="btn btn-primary create-link-btn" onclick="openPortInputPopup('@device.DeviceId')">Create Console Link</button>
+                                            }
                                             <button data-testid="removeDevice" type="submit" class="btn btn-danger remove-device-btn">Remove</button>
                                         </form>
-                                        @if (device.Address == null)
+                             @*            @if (device.Address == null)
                                         {
                                             <button data-testid="createLink" class="btn btn-primary create-link-btn" onclick="openPortInputPopup('@device.DeviceId')">Create Console Link</button>
-                                        }
+                                        } *@
                                     </div>
                                 </td>
                             </tr>
